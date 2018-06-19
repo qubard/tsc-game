@@ -2,8 +2,8 @@ var game: Game;
 
 window.onload = () => {
     var c = <HTMLCanvasElement> document.getElementById("canvas");
-	var ctx: CanvasRenderingContext2D = c.getContext("2d");
-	ctx.imageSmoothingEnabled = false; // enable nearest neighbor scaling
+    var ctx: CanvasRenderingContext2D = c.getContext("2d");
+    ctx.imageSmoothingEnabled = false; // enable nearest neighbor scaling
 
     game = new Game(ctx);
     init();
@@ -15,11 +15,11 @@ function registerKeys() {
 }
 
 function keydown(e: KeyboardEvent) {
-	game.getKeyboard().handleKeydown(<number>e.keyCode);
+    game.getKeyboard().handleKeydown(<number>e.keyCode);
 }
 
 function keyup(e: KeyboardEvent) {
-	game.getKeyboard().handleKeyup(<number>e.keyCode);
+    game.getKeyboard().handleKeyup(<number>e.keyCode);
 }
 
 function init() {
