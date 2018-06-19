@@ -1,6 +1,6 @@
 class AABB implements Renderable {
-    private pos: Vec2; // (x,y)
-    private size: Vec2; // (w,h)
+    private pos: Vec2;
+    private size: Vec2;
     
     constructor(pos: Vec2, size: Vec2) {
         this.pos = pos;
@@ -8,7 +8,7 @@ class AABB implements Renderable {
     }
     
     // Does a point lie inside the box?
-	collides(other: AABB): boolean {
+    collides(other: AABB): boolean {
         return this.pos.x >= other.pos.x && this.pos.x <= other.pos.x + other.size.x
         && this.pos.y >= other.pos.y && this.pos.y <= other.pos.y + other.size.y;
     }
