@@ -1,11 +1,12 @@
 var game: Game;
 
 window.onload = () => {
-    var c = <HTMLCanvasElement> document.getElementById("canvas");
-    var ctx: CanvasRenderingContext2D = c.getContext("2d");
+    var canvas = <HTMLCanvasElement> document.getElementById("canvas");
+    var ctx: CanvasRenderingContext2D = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; // enable nearest neighbor scaling
-
-    game = new Game(ctx);
+    
+    game = new Game(ctx, 60);
+    game.setSize(canvas.getBoundingClientRect());
     init();
 }
 
@@ -28,8 +29,7 @@ function init() {
 }
 
 function render() {
-    game.tick();
-    game.render();
+    game.loop();
     
     window.requestAnimationFrame(render);
 }

@@ -18,18 +18,29 @@ var AABB = (function () {
             && this.pos.y >= other.pos.y && this.pos.y <= other.pos.y + other.size.y;
     };
     AABB.prototype.render = function (ctx) {
-        ctx.rect(this.pos.x, this.pos.y, this.size.x, this.size.y);
-        ctx.strokeStyle = "#FF0000";
-        ctx.stroke();
+        if (ctx != null) {
+            ctx.beginPath();
+            ctx.strokeStyle = "#FF0000";
+            ctx.moveTo(this.pos.x, this.pos.y);
+            ctx.lineTo(this.pos.x + this.size.x, this.pos.y);
+            ctx.moveTo(this.pos.x, this.pos.y);
+            ctx.lineTo(this.pos.x, this.pos.y + this.size.y);
+            ctx.moveTo(this.pos.x, this.pos.y + this.size.y);
+            ctx.lineTo(this.pos.x + this.size.x, this.pos.y + this.size.y);
+            ctx.moveTo(this.pos.x + this.size.x, this.pos.y);
+            ctx.lineTo(this.pos.x + this.size.x, this.pos.y + this.size.y);
+            ctx.stroke();
+        }
     };
     return AABB;
 }());
 var game;
 window.onload = function () {
-    var c = document.getElementById("canvas");
-    var ctx = c.getContext("2d");
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
-    game = new Game(ctx);
+    game = new Game(ctx, 60);
+    game.setSize(canvas.getBoundingClientRect());
     init();
 };
 function registerKeys() {
@@ -47,8 +58,7 @@ function init() {
     render();
 }
 function render() {
-    game.tick();
-    game.render();
+    game.loop();
     window.requestAnimationFrame(render);
 }
 var Entity = (function () {
@@ -58,13 +68,29 @@ var Entity = (function () {
         this.bbox = bbox;
         this.init();
     }
+    Entity.prototype.init = function () { };
+    Entity.prototype.update = function () {
+        this.pos = this.pos.plus(this.velocity);
+    };
+    Entity.prototype.accelerate = function (delta) {
+        this.velocity = this.velocity.plus(delta);
+    };
     Entity.prototype.setVelocity = function (velocity) {
         this.velocity = velocity;
+    };
+    Entity.prototype.reduceVelocity = function (k) {
+        this.velocity = this.velocity.scale(k);
+        var mag = Vec2.mag(this.velocity);
+        if (mag > 0 && mag < 0.3) {
+            this.velocity = new Vec2(0, 0);
+        }
+    };
+    Entity.prototype.resetVelocity = function () {
+        this.velocity = new Vec2(0, 0);
     };
     Entity.prototype.setBoundingBox = function (bbox) {
         this.bbox = bbox;
     };
-    Entity.prototype.init = function () { };
     Entity.prototype.collides = function (ent) {
         return this.bbox.collides(ent.bbox);
     };
@@ -91,26 +117,55 @@ var PunPun = (function (_super) {
     return PunPun;
 }(Entity));
 var Game = (function () {
-    function Game(ctx) {
+    function Game(ctx, fps) {
         this.ctx = ctx;
+        this.fps = fps;
         this.keyboard = new Keyboard();
-        this.player = new PunPun(new Vec2(50, 50));
+        this.timestep = 1000 / fps;
+        this.delta = 0;
+        this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
     }
+    Game.prototype.setSize = function (size) {
+        this.size = size;
+    };
     Game.prototype.getKeyboard = function () {
         return this.keyboard;
     };
     Game.prototype.getCanvasContext = function () {
         return this.ctx;
     };
-    Game.prototype.tick = function () {
-        if (this.keyboard.isKeyDown(Keys.RIGHT)) {
-            console.log("Pressed right wkey");
+    Game.prototype.loop = function () {
+        if (this.lastTick == null) {
+            this.lastTick = Date.now();
         }
-        else if (this.keyboard.isKeyDown(Keys.LEFT)) {
-            console.log("Pressed left key");
+        this.delta += Date.now() - this.lastTick;
+        this.lastTick = Date.now();
+        while (this.delta >= this.timestep) {
+            this.update(this.timestep);
+            this.delta -= this.timestep;
+        }
+        this.render();
+    };
+    Game.prototype.update = function (elapsed) {
+        this.player.update();
+        if (this.keyboard.isKeyDown(Keys.RIGHT)) {
+            this.player.accelerate(new Vec2(0.15, 0));
+        }
+        if (this.keyboard.isKeyDown(Keys.LEFT)) {
+            this.player.accelerate(new Vec2(-0.15, 0));
+        }
+        if (this.keyboard.isKeyDown(Keys.DOWN)) {
+            this.player.accelerate(new Vec2(0, 0.15));
+        }
+        if (this.keyboard.isKeyDown(Keys.UP)) {
+            this.player.accelerate(new Vec2(0, -0.15));
+        }
+        if (this.keyboard.getPresses() == 0) {
+            this.player.reduceVelocity(0.9);
         }
     };
     Game.prototype.render = function () {
+        this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         var frame = { crop: new Vec2(0, 0), size: new Vec2(13, 17), scale: 4 };
         this.player.render(this.ctx, frame);
     };
@@ -134,20 +189,29 @@ var Keys;
 (function (Keys) {
     Keys[Keys["RIGHT"] = 39] = "RIGHT";
     Keys[Keys["LEFT"] = 37] = "LEFT";
+    Keys[Keys["UP"] = 38] = "UP";
+    Keys[Keys["DOWN"] = 40] = "DOWN";
 })(Keys || (Keys = {}));
 var Keyboard = (function () {
-    function Keyboard() {
+    function Keyboard(presses) {
+        if (presses === void 0) { presses = 0; }
+        this.presses = presses;
         this.keys = new Array(255);
     }
     Keyboard.prototype.isKeyDown = function (keycode) {
         return this.keys[keycode];
     };
     ;
+    Keyboard.prototype.getPresses = function () {
+        return this.presses;
+    };
     Keyboard.prototype.handleKeydown = function (keycode) {
         this.keys[keycode] = true;
+        this.presses++;
     };
     Keyboard.prototype.handleKeyup = function (keycode) {
         this.keys[keycode] = false;
+        this.presses = Math.max(this.presses - 1, 0);
     };
     return Keyboard;
 }());
@@ -162,6 +226,9 @@ var Vec2 = (function () {
     }
     Vec2.prototype.scale = function (k) {
         return Vec2.times(k, this);
+    };
+    Vec2.prototype.plus = function (v) {
+        return Vec2.plus(this, v);
     };
     Vec2.times = function (k, v) {
         return new Vec2(k * v.x, k * v.y);

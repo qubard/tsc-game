@@ -5,6 +5,10 @@ class Vec2 {
         return Vec2.times(k, this);
     }
     
+    plus(v: Vec2) {
+        return Vec2.plus(this, v);
+    }
+    
     static times(k: number, v: Vec2) {
         return new Vec2(k * v.x, k * v.y);
     }
