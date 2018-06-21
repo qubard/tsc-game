@@ -70,11 +70,21 @@ var Entity = (function () {
         this.bbox = bbox;
         this.init();
     }
+    Entity.prototype.initPath = function (delay) {
+        this.lastPush = Date.now();
+        this.path = new Path(delay);
+    };
     Entity.prototype.init = function () {
         this.velocity = new Vec2(0, 0);
     };
     Entity.prototype.update = function () {
-        this.pos = this.pos.plus(this.velocity);
+        if (this.isMoving()) {
+            this.pos = this.pos.plus(this.velocity);
+            if (this.path && Date.now() - this.lastPush > this.path.getDelay()) {
+                this.path.addNode(this.pos);
+                this.lastPush = Date.now();
+            }
+        }
     };
     Entity.prototype.isMoving = function () {
         return Vec2.mag(this.velocity) > 0;
@@ -99,7 +109,6 @@ var Entity = (function () {
     };
     Entity.prototype.decelerate = function (v, min) {
         var mag = Vec2.mag(this.velocity);
-        console.log(mag);
         if (mag > 0 && mag < min) {
             this.resetVelocity();
         }
@@ -124,19 +133,19 @@ var PunPun = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     PunPun.prototype.init = function () {
+        this.currentFrame = 0;
+        this.frames = [];
         this.rendered = true;
         this.sprite = new ImageWrapper(Sprites.PunPun);
     };
-    PunPun.prototype.render = function (ctx, frame) {
+    PunPun.prototype.render = function (ctx) {
         if (ctx != null) {
+            var frame = this.frames[this.currentFrame];
             this.setBoundingBox(new AABB(this.pos, frame.size.scale(frame.scale)));
             ctx.drawImage(this.sprite.getImage(), frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, this.pos.x, this.pos.y, frame.size.x * frame.scale, frame.size.y * frame.scale);
             this.bbox.render(ctx);
+            this.path.render(ctx);
         }
-    };
-    PunPun.prototype.renderAnimated = function (ctx) {
-        var frame = this.frames[this.currentFrame];
-        this.render(ctx, frame);
     };
     return PunPun;
 }(Entity));
@@ -148,6 +157,10 @@ var Game = (function () {
         this.timestep = 1000 / fps;
         this.delta = 0;
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
+        this.player.init();
+        this.player.initPath(50);
+        var frame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
+        this.player.frames.push(frame);
     }
     Game.prototype.setSize = function (size) {
         this.size = size;
@@ -171,7 +184,7 @@ var Game = (function () {
         this.render();
     };
     Game.prototype.doInput = function () {
-        var MAX_VELOCITY = 4;
+        var MAX_VELOCITY = 3;
         this.player.resetDirection();
         if (this.keyboard.isKeyDown(Keys.RIGHT)) {
             this.player.addDirection(new Vec2(1, 0));
@@ -201,8 +214,7 @@ var Game = (function () {
     };
     Game.prototype.render = function () {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
-        var frame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
-        this.player.render(this.ctx, frame);
+        this.player.render(this.ctx);
     };
     return Game;
 }());
@@ -254,6 +266,37 @@ var Keyboard = (function () {
     };
     return Keyboard;
 }());
+var Path = (function () {
+    function Path(delay) {
+        this.delay = delay;
+        this.nodes = [];
+        this.rendered = true;
+    }
+    Path.prototype.getDelay = function () {
+        return this.delay;
+    };
+    Path.prototype.addNode = function (node) {
+        if (this.nodes.length <= 1 || (this.nodes.length > 1 && !this.nodes[this.nodes.length - 1].equals(node))) {
+            this.nodes.push(node);
+        }
+    };
+    Path.prototype.clearNodes = function () {
+        this.nodes = [];
+    };
+    Path.prototype.render = function (ctx, frame) {
+        if (ctx != null && this.rendered) {
+            for (var i = 0; i < this.nodes.length - 1; i++) {
+                var node = this.nodes[i];
+                var next = this.nodes[i + 1];
+                ctx.beginPath();
+                ctx.moveTo(node.x, node.y);
+                ctx.lineTo(next.x, next.y);
+                ctx.stroke();
+            }
+        }
+    };
+    return Path;
+}());
 var Sprites;
 (function (Sprites) {
     Sprites["PunPun"] = "stahlsby.png";
@@ -263,6 +306,9 @@ var Vec2 = (function () {
         this.x = x;
         this.y = y;
     }
+    Vec2.prototype.equals = function (v) {
+        return this.x == v.x && this.y == v.y;
+    };
     Vec2.prototype.scale = function (k) {
         return Vec2.times(k, this);
     };

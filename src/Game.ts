@@ -13,6 +13,10 @@ class Game {
         this.delta = 0;
         
         this.player = new PunPun(new Vec2(50,50), new Vec2(0,0));
+        this.player.init();
+        this.player.initPath(50);
+        var frame: SpriteFrame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
+        this.player.frames.push(frame);
     }
     
     setSize(size: ClientRect) {
@@ -42,7 +46,7 @@ class Game {
     }
     
     doInput() {
-        let MAX_VELOCITY = 4;
+        let MAX_VELOCITY = 3;
         
         this.player.resetDirection();
         
@@ -81,7 +85,6 @@ class Game {
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         
-        var frame: SpriteFrame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
-        this.player.render(this.ctx, frame);
+        this.player.render(this.ctx);
     }
 }
