@@ -4,7 +4,6 @@ class Entity {
     protected bbox?: AABB; // 2d collision bounding box
         
     path: Path;
-    lastPush: number;
     
     constructor(pos: Vec2, public direction: Vec2, bbox?: AABB) {
         this.pos = pos;
@@ -26,9 +25,8 @@ class Entity {
     update() {
         if(this.isMoving()) {
             this.pos = this.pos.plus(this.velocity);
-            if(this.path && Date.now() - this.lastPush > this.path.getDelay()) {
+            if(this.path) {
                 this.path.addNode(this.pos);
-                this.lastPush = Date.now();
             }
         }
     }

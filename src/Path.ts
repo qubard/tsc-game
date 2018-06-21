@@ -3,9 +3,11 @@ class Path implements Renderable {
     sprite?: ImageWrapper;
     rendered: boolean;
     private nodes: Vec2[];
+    private lastPush: number;
     
     constructor(private delay: number) {
         this.nodes = [];
+        this.lastPush = Date.now();
         this.rendered = true;
     }
     
@@ -15,7 +17,10 @@ class Path implements Renderable {
     
     addNode(node: Vec2) {
         if(this.nodes.length <= 1 || (this.nodes.length > 1 && !this.nodes[this.nodes.length-1].equals(node))) {
-            this.nodes.push(node);
+            if(Date.now() - this.lastPush > this.path.getDelay()) {
+                this.nodes.push(node);
+                this.lastPush = Date.now();
+            }
         }
     }
     
