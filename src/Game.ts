@@ -43,6 +43,12 @@ class Game {
 
         this.delta += Date.now() - this.lastTick;
         this.lastTick = Date.now();
+        
+        // delta is way too high (missed 10s of ticks, reset otherwise loop is basically infinite)
+        if(this.delta/this.timestep >= this.fps*10) {
+            this.delta = 0;
+        }
+        
         while(this.delta >= this.timestep) {
             this.update(this.timestep);
             this.delta -= this.timestep;
