@@ -40,7 +40,7 @@ window.onload = function () {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
-    game = new Game(ctx, 144);
+    game = new Game(ctx, 200);
     game.setSize(canvas.getBoundingClientRect());
     init();
 };
@@ -65,16 +65,15 @@ function render() {
 var Entity = (function () {
     function Entity(pos, direction, bbox) {
         this.direction = direction;
-        this.pos = pos;
         this.velocity = new Vec2(0, 0);
+        this.max_velocity = 1;
+        this.pos = pos;
         this.bbox = bbox;
         this.init();
     }
+    Entity.prototype.init = function () { };
     Entity.prototype.initPath = function (delay) {
         this.path = new Path(delay);
-    };
-    Entity.prototype.init = function () {
-        this.velocity = new Vec2(0, 0);
     };
     Entity.prototype.update = function () {
         if (this.isMoving()) {
@@ -83,6 +82,9 @@ var Entity = (function () {
                 this.path.addNode(this.pos);
             }
         }
+    };
+    Entity.prototype.setMaxVelocity = function (max_velocity) {
+        this.max_velocity = max_velocity;
     };
     Entity.prototype.isMoving = function () {
         return Vec2.mag(this.velocity) > 0;
@@ -93,10 +95,10 @@ var Entity = (function () {
     Entity.prototype.addDirection = function (delta) {
         this.direction = this.direction.plus(delta);
     };
-    Entity.prototype.accelerate = function (v, max) {
+    Entity.prototype.accelerate = function (v) {
         var mag = Vec2.mag(this.velocity);
-        if (mag > 0 && mag > max) {
-            this.velocity = Vec2.norm(this.velocity).scale(max);
+        if (mag > 0 && mag > this.max_velocity) {
+            this.velocity = Vec2.norm(this.velocity).scale(this.max_velocity);
         }
         else {
             this.velocity = this.velocity.plus(this.direction.scale(v));
@@ -140,25 +142,57 @@ var PunPun = (function (_super) {
         if (ctx != null) {
             var frame = this.frames[this.currentFrame];
             this.setBoundingBox(new AABB(this.pos, frame.size.scale(frame.scale)));
-            ctx.drawImage(this.sprite.getImage(), frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, this.pos.x, this.pos.y, frame.size.x * frame.scale, frame.size.y * frame.scale);
+            this.sprite.draw(ctx, frame, this.pos);
             this.bbox.render(ctx);
-            this.path.render(ctx);
+            if (this.path) {
+                this.path.render(ctx);
+            }
         }
     };
     return PunPun;
 }(Entity));
+var Font = (function () {
+    function Font(font, text, scale, dst) {
+        this.font = font;
+        this.text = text;
+        this.scale = scale;
+        this.dst = dst;
+        this.glyphs = new ImageWrapper(font);
+        this.rendered = true;
+    }
+    Font.init_map = function () {
+        for (var i = 0; i < Font.charset.length; i++) {
+            var v = Number(Font.charset.charCodeAt(i));
+            Font.charset_map[v] = i * 9;
+        }
+    };
+    Font.prototype.render = function (ctx) {
+        if (ctx != null && this.rendered) {
+            for (var i = 0; i < this.text.length; i++) {
+                var x = Font.charset_map[Number(this.text.charCodeAt(i))];
+                ctx.drawImage(this.glyphs.getImage(), x, 0, 9, 9, this.dst.x + i * 9 * this.scale, this.dst.y, 9 * this.scale, 9 * this.scale);
+            }
+        }
+    };
+    Font.charset = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+    Font.charset_map = new Array(255);
+    return Font;
+}());
 var Game = (function () {
     function Game(ctx, fps) {
         this.ctx = ctx;
         this.fps = fps;
+        this.sample_text = new Font(Fonts.TorusSans, "Hi, testing fonts.\\:^)", 4, new Vec2(10, 10));
         this.keyboard = new Keyboard();
         this.timestep = 1000 / fps;
         this.delta = 0;
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
         this.player.init();
+        this.player.setMaxVelocity(2);
         this.player.initPath(50);
         var frame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
         this.player.frames.push(frame);
+        Font.init_map();
     }
     Game.prototype.setSize = function (size) {
         this.size = size;
@@ -179,10 +213,8 @@ var Game = (function () {
             this.update(this.timestep);
             this.delta -= this.timestep;
         }
-        this.render();
     };
     Game.prototype.doInput = function () {
-        var MAX_VELOCITY = 3;
         this.player.resetDirection();
         if (this.keyboard.isKeyDown(Keys.RIGHT)) {
             this.player.addDirection(new Vec2(1, 0));
@@ -200,7 +232,7 @@ var Game = (function () {
             this.player.direction = Vec2.norm(this.player.direction);
         }
         if (this.keyboard.getPresses() > 0) {
-            this.player.accelerate(0.25, MAX_VELOCITY);
+            this.player.accelerate(0.25);
         }
         else if (this.keyboard.getPresses() == 0 && this.player.isMoving()) {
             this.player.decelerate(0.1, 0.1);
@@ -209,10 +241,12 @@ var Game = (function () {
     Game.prototype.update = function (elapsed) {
         this.doInput();
         this.player.update();
+        this.render();
     };
     Game.prototype.render = function () {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         this.player.render(this.ctx);
+        this.sample_text.render(this.ctx);
     };
     return Game;
 }());
@@ -227,6 +261,9 @@ var ImageWrapper = (function () {
     };
     ImageWrapper.prototype.getImage = function () {
         return this.img;
+    };
+    ImageWrapper.prototype.draw = function (ctx, frame, pos) {
+        ctx.drawImage(this.img, frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, pos.x, pos.y, frame.size.x * frame.scale, frame.size.y * frame.scale);
     };
     return ImageWrapper;
 }());
@@ -303,6 +340,10 @@ var Sprites;
 (function (Sprites) {
     Sprites["PunPun"] = "stahlsby.png";
 })(Sprites || (Sprites = {}));
+var Fonts;
+(function (Fonts) {
+    Fonts["TorusSans"] = "TorusSans.png";
+})(Fonts || (Fonts = {}));
 var Vec2 = (function () {
     function Vec2(x, y) {
         this.x = x;

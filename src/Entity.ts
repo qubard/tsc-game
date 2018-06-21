@@ -1,24 +1,22 @@
 class Entity {
     protected pos: Vec2;
-    protected velocity: Vec2;
+    protected velocity: Vec2 = new Vec2(0,0);
     protected bbox?: AABB; // 2d collision bounding box
         
     protected path: Path;
+    protected max_velocity: number = 1;
     
     constructor(pos: Vec2, public direction: Vec2, bbox?: AABB) {
         this.pos = pos;
-        this.velocity = new Vec2(0,0);
         this.bbox = bbox;
 
         this.init();
     }
     
+    protected init() { }
+    
     initPath(delay: number) {
         this.path = new Path(delay);
-    }
-    
-    protected init() {
-        this.velocity = new Vec2(0,0);
     }
     
     update() {
@@ -28,6 +26,10 @@ class Entity {
                 this.path.addNode(this.pos);
             }
         }
+    }
+    
+    setMaxVelocity(max_velocity: number) {
+        this.max_velocity = max_velocity;
     }
     
     isMoving(): boolean {
@@ -42,10 +44,10 @@ class Entity {
         this.direction = this.direction.plus(delta);
     }
 
-    accelerate(v: number, max: number) {
+    accelerate(v: number) {
         let mag = Vec2.mag(this.velocity);
-        if(mag > 0 && mag > max) {
-            this.velocity = Vec2.norm(this.velocity).scale(max);
+        if(mag > 0 && mag > this.max_velocity) {
+            this.velocity = Vec2.norm(this.velocity).scale(this.max_velocity);
         } else {
             this.velocity = this.velocity.plus(this.direction.scale(v));
         }
@@ -79,7 +81,6 @@ class Entity {
 
 class PunPun extends Entity implements Animated, Renderable {
     
-    // Need to make these private (?) in an interface
     sprite: ImageWrapper;
     currentFrame: number;
     rendered: boolean;
@@ -96,9 +97,11 @@ class PunPun extends Entity implements Animated, Renderable {
         if(ctx != null) {
             let frame = this.frames[this.currentFrame];
             this.setBoundingBox(new AABB(this.pos, frame.size.scale(frame.scale)));
-            ctx.drawImage(this.sprite.getImage(), frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, this.pos.x, this.pos.y, frame.size.x*frame.scale, frame.size.y*frame.scale);
+            this.sprite.draw(ctx, frame, this.pos);
             this.bbox.render(ctx);
-            this.path.render(ctx);
+            if(this.path) {
+                this.path.render(ctx);
+            }
         }
     }
 }

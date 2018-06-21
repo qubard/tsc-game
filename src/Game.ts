@@ -7,6 +7,8 @@ class Game {
     private delta: number;
     private lastTick: number;
     
+    private sample_text:Font = new Font(Fonts.TorusSans, "Hi, testing fonts.\\:^)", 4, new Vec2(10, 10));
+    
     constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
         this.keyboard = new Keyboard();
         this.timestep = 1000/fps;
@@ -14,9 +16,12 @@ class Game {
         
         this.player = new PunPun(new Vec2(50,50), new Vec2(0,0));
         this.player.init();
+        this.player.setMaxVelocity(2);
         this.player.initPath(50);
         var frame: SpriteFrame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
         this.player.frames.push(frame);
+        
+        Font.init_map();
     }
     
     setSize(size: ClientRect) {
@@ -42,12 +47,9 @@ class Game {
             this.update(this.timestep);
             this.delta -= this.timestep;
         }
-        this.render();
     }
     
     doInput() {
-        let MAX_VELOCITY = 3;
-        
         this.player.resetDirection();
         
         if(this.keyboard.isKeyDown(Keys.RIGHT)) {
@@ -71,7 +73,7 @@ class Game {
         }
         
         if(this.keyboard.getPresses() > 0) {
-            this.player.accelerate(0.25, MAX_VELOCITY);
+            this.player.accelerate(0.25);
         } else if(this.keyboard.getPresses() == 0 && this.player.isMoving()) {
             this.player.decelerate(0.1, 0.1);
         }
@@ -80,11 +82,13 @@ class Game {
     update(elapsed: number) {
         this.doInput();
         this.player.update();
+        this.render();
     }
     
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         
         this.player.render(this.ctx);
+        this.sample_text.render(this.ctx);
     }
 }
