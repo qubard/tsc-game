@@ -15,6 +15,5 @@ interface Animated {
 
 interface Renderable {
     rendered: boolean;
-    sprite?: ImageWrapper;
     render(ctx: CanvasRenderingContext2D): void;
 }

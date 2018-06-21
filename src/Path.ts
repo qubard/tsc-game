@@ -17,7 +17,7 @@ class Path implements Renderable {
     
     addNode(node: Vec2) {
         if(this.nodes.length <= 1 || (this.nodes.length > 1 && !this.nodes[this.nodes.length-1].equals(node))) {
-            if(Date.now() - this.lastPush > this.path.getDelay()) {
+            if(Date.now() - this.lastPush > this.delay) {
                 this.nodes.push(node);
                 this.lastPush = Date.now();
             }

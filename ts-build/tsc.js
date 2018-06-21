@@ -71,7 +71,6 @@ var Entity = (function () {
         this.init();
     }
     Entity.prototype.initPath = function (delay) {
-        this.lastPush = Date.now();
         this.path = new Path(delay);
     };
     Entity.prototype.init = function () {
@@ -80,9 +79,8 @@ var Entity = (function () {
     Entity.prototype.update = function () {
         if (this.isMoving()) {
             this.pos = this.pos.plus(this.velocity);
-            if (this.path && Date.now() - this.lastPush > this.path.getDelay()) {
+            if (this.path) {
                 this.path.addNode(this.pos);
-                this.lastPush = Date.now();
             }
         }
     };
@@ -270,6 +268,7 @@ var Path = (function () {
     function Path(delay) {
         this.delay = delay;
         this.nodes = [];
+        this.lastPush = Date.now();
         this.rendered = true;
     }
     Path.prototype.getDelay = function () {
@@ -277,7 +276,10 @@ var Path = (function () {
     };
     Path.prototype.addNode = function (node) {
         if (this.nodes.length <= 1 || (this.nodes.length > 1 && !this.nodes[this.nodes.length - 1].equals(node))) {
-            this.nodes.push(node);
+            if (Date.now() - this.lastPush > this.delay) {
+                this.nodes.push(node);
+                this.lastPush = Date.now();
+            }
         }
     };
     Path.prototype.clearNodes = function () {

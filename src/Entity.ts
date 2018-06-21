@@ -3,7 +3,7 @@ class Entity {
     protected velocity: Vec2;
     protected bbox?: AABB; // 2d collision bounding box
         
-    path: Path;
+    protected path: Path;
     
     constructor(pos: Vec2, public direction: Vec2, bbox?: AABB) {
         this.pos = pos;
@@ -13,8 +13,7 @@ class Entity {
         this.init();
     }
     
-    public initPath(delay: number) {
-        this.lastPush = Date.now();
+    initPath(delay: number) {
         this.path = new Path(delay);
     }
     
