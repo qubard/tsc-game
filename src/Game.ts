@@ -16,7 +16,7 @@ class Game {
         
         this.player = new PunPun(new Vec2(50,50), new Vec2(0,0));
         this.player.init();
-        this.player.setMaxVelocity(2);
+        this.player.setMaxVelocity(2*200/fps);
         this.player.initPath(50);
         var frame: SpriteFrame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
         this.player.frames.push(frame);
@@ -40,7 +40,7 @@ class Game {
         if(this.lastTick == null) {
             this.lastTick = Date.now();
         }
-        
+
         this.delta += Date.now() - this.lastTick;
         this.lastTick = Date.now();
         while(this.delta >= this.timestep) {
