@@ -1,11 +1,11 @@
 var game: Game;
 
 window.onload = () => {
-    var canvas = <HTMLCanvasElement> document.getElementById("canvas");
+    var canvas = <HTMLCanvasElement> document.getElementById(CanvasParams.CanvasID);
     var ctx: CanvasRenderingContext2D = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; // enable nearest neighbor scaling
     
-    game = new Game(ctx, 200);
+    game = new Game(ctx, CanvasParams.FPS);
     game.setSize(canvas.getBoundingClientRect());
     init();
 }

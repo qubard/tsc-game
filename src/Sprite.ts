@@ -1,11 +1,3 @@
-enum Sprites {
-    PunPun = 'stahlsby.png'
-}
-
-enum Fonts {
-    TorusSans = 'TorusSans.png'
-}
-
 interface SpriteFrame {
     crop: Vec2;
     size: Vec2;
