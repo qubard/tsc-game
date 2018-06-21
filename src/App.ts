@@ -11,6 +11,7 @@ window.onload = () => {
 }
 
 function registerKeys() {
+    game.getKeyboard().validateKeys([Keys.LEFT, Keys.RIGHT, Keys.UP, Keys.DOWN]);
     window.addEventListener('keydown', keydown, false);
     window.addEventListener('keyup', keyup, false);
 }
