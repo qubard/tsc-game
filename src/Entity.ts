@@ -26,6 +26,9 @@ class Entity {
     update() {
         if(this.isMoving()) {
             this.pos = this.pos.plus(this.velocity);
+            if(this.bbox) {
+                this.bbox.update(this.pos);
+            }
             if(this.path) {
                 this.path.addNode(this.pos);
             }
@@ -93,18 +96,18 @@ class PunPun extends Entity implements Animated, Renderable {
     init() {
         this.currentFrame = 0;
         this.frames = [];
-        //this.frames.push({crop: new Vec2(0,0), size: new Vec2(13,17), scale: 4}); // idle_r
-        this.frames.push({crop: new Vec2(13,0), size: new Vec2(18,17), scale: 4}); // move_r_1
-        this.frames.push({crop: new Vec2(31,0), size: new Vec2(15,17), scale: 4}); // move_r_2
-        this.frames.push({crop: new Vec2(46,0), size: new Vec2(17,15), scale: 4}); // move_r_3
+        this.setBoundingBox(new AABB(this.pos, new Vec2(18,17).scale(4)));
+        this.frames.push({crop: new Vec2(0,0), size: new Vec2(13,17), scale: 4}); // idle_r
+        this.frames.push({crop: new Vec2(14,0), size: new Vec2(17,17), scale: 4}); // move_r_1
+        this.frames.push({crop: new Vec2(31,0), size: new Vec2(16,17), scale: 4}); // move_r_2
+        this.frames.push({crop: new Vec2(47,0), size: new Vec2(18,15), scale: 4}); // move_r_3
         this.rendered = true;
         this.sprite = new ImageWrapper(Sprites.PunPun);
     }
 
     render(ctx: CanvasRenderingContext2D) {
         if(ctx != null) {
-            let frame = this.frames[((++this.currentFrame/150) | 0) % this.frames.length];
-            this.setBoundingBox(new AABB(this.pos, frame.size.scale(frame.scale)));
+            let frame = this.frames[((++this.currentFrame/50) | 0) % (this.frames.length-1) + 1];
             this.sprite.draw(ctx, frame, this.pos);
             this.bbox.render(ctx);
             if(this.path) {

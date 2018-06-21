@@ -18,8 +18,6 @@ class Game {
         this.player.init();
         this.player.setMaxVelocity(2*200/fps);
         this.player.initPath(50);
-        var frame: SpriteFrame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
-        this.player.frames.push(frame);
         
         Font.init_map();
     }
@@ -95,7 +93,7 @@ class Game {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         
         this.player.render(this.ctx);
-        this.sample_text.text = "n:"+this.player.getPath().getLength();
+        this.sample_text.text = "n:"+this.player.getPath().getLength() + "," + this.keyboard.getPresses();
         this.sample_text.render(this.ctx);
     }
 }

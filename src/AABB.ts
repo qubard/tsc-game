@@ -1,12 +1,16 @@
 class AABB implements Renderable {
-    private pos: Vec2;
-    private size: Vec2;
     rendered: boolean;
     
-    constructor(pos: Vec2, size: Vec2) {
-        this.pos = pos;
-        this.size = size;
+    constructor(private pos: Vec2, private size: Vec2) {
         this.rendered = true;
+    }
+    
+    update(pos: Vec2): void {
+        this.pos = pos;
+    }
+    
+    getSize(): Vec2 {
+        return this.size;
     }
     
     // Does a point lie inside the box?
