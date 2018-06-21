@@ -40,35 +40,48 @@ class Game {
         }
         this.render();
     }
-
-    update(elapsed: number) {
-        this.player.update();
+    
+    doInput() {
+        let MAX_VELOCITY = 4;
+        
+        this.player.resetDirection();
         
         if(this.keyboard.isKeyDown(Keys.RIGHT)) {
-            this.player.accelerate(new Vec2(0.15, 0));
+            this.player.addDirection(new Vec2(1, 0));
         }
         
         if(this.keyboard.isKeyDown(Keys.LEFT)) {
-            this.player.accelerate(new Vec2(-0.15, 0));
-        } 
+            this.player.addDirection(new Vec2(-1, 0));
+        }
         
         if(this.keyboard.isKeyDown(Keys.DOWN)) {
-            this.player.accelerate(new Vec2(0, 0.15));
-        } 
+            this.player.addDirection(new Vec2(0, 1));
+        }
         
         if(this.keyboard.isKeyDown(Keys.UP)) {
-            this.player.accelerate(new Vec2(0, -0.15));
+            this.player.addDirection(new Vec2(0, -1));
         }
         
-        if(this.keyboard.getPresses() == 0) {
-            this.player.reduceVelocity(0.9);
+        if(Vec2.mag(this.player.direction) > 0) {
+            this.player.direction = Vec2.norm(this.player.direction);
         }
+        
+        if(this.keyboard.getPresses() > 0) {
+            this.player.accelerate(0.25, MAX_VELOCITY);
+        } else if(this.keyboard.getPresses() == 0 && this.player.isMoving()) {
+            this.player.decelerate(0.1, 0.1);
+        }
+    }
+
+    update(elapsed: number) {
+        this.doInput();
+        this.player.update();
     }
     
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         
-        var frame: SpriteFrame = { crop: new Vec2(0,0), size: new Vec2(13, 17), scale: 4 };
+        var frame: SpriteFrame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
         this.player.render(this.ctx, frame);
     }
 }

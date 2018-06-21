@@ -1,35 +1,56 @@
 class Entity {
     protected pos: Vec2;
-    protected velocity?: Vec2;
+    protected velocity: Vec2;
     protected bbox?: AABB; // 2d collision bounding box
 
-    constructor(pos: Vec2, velocity: Vec2, bbox?: AABB) {
+    constructor(pos: Vec2, public direction: Vec2, bbox?: AABB) {
         this.pos = pos;
-        this.velocity = velocity;
+        this.velocity = new Vec2(0,0);
         this.bbox = bbox;
         
         this.init();
     }
     
-    protected init() { }
+    protected init() {
+        this.velocity = new Vec2(0,0);
+    }
     
     update() {
         this.pos = this.pos.plus(this.velocity);
     }
     
-    accelerate(delta: Vec2) {
-        this.velocity = this.velocity.plus(delta);
+    isMoving(): boolean {
+        return Vec2.mag(this.velocity) > 0;
+    }
+    
+    resetDirection() {
+        this.direction = new Vec2(0, 0);
+    }
+    
+    addDirection(delta: Vec2) {
+        this.direction = this.direction.plus(delta);
+    }
+
+    accelerate(v: number, max: number) {
+        let mag = Vec2.mag(this.velocity);
+        if(mag > 0 && mag > max) {
+            this.velocity = Vec2.norm(this.velocity).scale(max);
+        } else {
+            this.velocity = this.velocity.plus(this.direction.scale(v));
+        }
     }
     
     setVelocity(velocity: Vec2) {
         this.velocity = velocity;
     }
     
-    reduceVelocity(k: number) {
-        this.velocity = this.velocity.scale(k);
+    decelerate(v: number, min: number) {
         let mag = Vec2.mag(this.velocity);
-        if(mag > 0 && mag < 0.3) {
-            this.velocity = new Vec2(0,0);
+        console.log(mag);
+        if(mag > 0 && mag < min) {
+            this.resetVelocity();
+        } else {
+            this.velocity = this.velocity.minus(this.velocity.scale(v));
         }
     }
     
@@ -46,15 +67,16 @@ class Entity {
     }
 }
 
-class PunPun extends Entity {
+class PunPun extends Entity implements Animated, Renderable {
     
-    private sprite: ImageWrapper;
-    
-    contructor(pos: Vec2, velocity?: Vec2, bbox?: AABB) {
-        this.sprite = new ImageWrapper(Sprites.PunPun);
-    }
+    // Need to make these private (?) in an interface
+    sprite: ImageWrapper;
+    frames: SpriteFrame[];
+    currentFrame: number;
+    rendered: boolean;
     
     init() {
+        this.rendered = true;
         this.sprite = new ImageWrapper(Sprites.PunPun);
     }
     
@@ -64,5 +86,10 @@ class PunPun extends Entity {
             ctx.drawImage(this.sprite.getImage(), frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, this.pos.x, this.pos.y, frame.size.x*frame.scale, frame.size.y*frame.scale);
             this.bbox.render(ctx);
         }
+    }
+    
+    renderAnimated(ctx: CanvasRenderingContext2D) {
+        let frame = this.frames[this.currentFrame];
+        this.render(ctx, frame);
     }
 }

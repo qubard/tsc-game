@@ -1,10 +1,12 @@
 class AABB implements Renderable {
     private pos: Vec2;
     private size: Vec2;
+    rendered: boolean;
     
     constructor(pos: Vec2, size: Vec2) {
         this.pos = pos;
         this.size = size;
+        this.rendered = true;
     }
     
     // Does a point lie inside the box?
@@ -14,7 +16,7 @@ class AABB implements Renderable {
     }
     
     render(ctx: CanvasRenderingContext2D): void {
-        if(ctx != null) {
+        if(ctx != null && this.rendered) {
             ctx.beginPath(); // clear old rect path
             ctx.strokeStyle = "#FF0000";
             ctx.moveTo(this.pos.x, this.pos.y);

@@ -5,7 +5,7 @@ window.onload = () => {
     var ctx: CanvasRenderingContext2D = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; // enable nearest neighbor scaling
     
-    game = new Game(ctx, 60);
+    game = new Game(ctx, 144);
     game.setSize(canvas.getBoundingClientRect());
     init();
 }

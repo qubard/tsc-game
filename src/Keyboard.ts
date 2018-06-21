@@ -21,12 +21,16 @@ class Keyboard {
     }
         
     handleKeydown(keycode: number) {
-        this.keys[keycode] = true;
-        this.presses++;
+        if(!this.keys[keycode]) {
+            this.presses++;
+            this.keys[keycode] = true;
+        }
     }
     
     handleKeyup(keycode: number) {
-        this.keys[keycode] = false;
-        this.presses = Math.max(this.presses-1, 0);
+        if(this.keys[keycode]) {
+            this.presses--;
+            this.keys[keycode] = false;
+        }
     }
 }

@@ -12,13 +12,14 @@ var AABB = (function () {
     function AABB(pos, size) {
         this.pos = pos;
         this.size = size;
+        this.rendered = true;
     }
     AABB.prototype.collides = function (other) {
         return this.pos.x >= other.pos.x && this.pos.x <= other.pos.x + other.size.x
             && this.pos.y >= other.pos.y && this.pos.y <= other.pos.y + other.size.y;
     };
     AABB.prototype.render = function (ctx) {
-        if (ctx != null) {
+        if (ctx != null && this.rendered) {
             ctx.beginPath();
             ctx.strokeStyle = "#FF0000";
             ctx.moveTo(this.pos.x, this.pos.y);
@@ -39,7 +40,7 @@ window.onload = function () {
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
-    game = new Game(ctx, 60);
+    game = new Game(ctx, 144);
     game.setSize(canvas.getBoundingClientRect());
     init();
 };
@@ -62,27 +63,48 @@ function render() {
     window.requestAnimationFrame(render);
 }
 var Entity = (function () {
-    function Entity(pos, velocity, bbox) {
+    function Entity(pos, direction, bbox) {
+        this.direction = direction;
         this.pos = pos;
-        this.velocity = velocity;
+        this.velocity = new Vec2(0, 0);
         this.bbox = bbox;
         this.init();
     }
-    Entity.prototype.init = function () { };
+    Entity.prototype.init = function () {
+        this.velocity = new Vec2(0, 0);
+    };
     Entity.prototype.update = function () {
         this.pos = this.pos.plus(this.velocity);
     };
-    Entity.prototype.accelerate = function (delta) {
-        this.velocity = this.velocity.plus(delta);
+    Entity.prototype.isMoving = function () {
+        return Vec2.mag(this.velocity) > 0;
+    };
+    Entity.prototype.resetDirection = function () {
+        this.direction = new Vec2(0, 0);
+    };
+    Entity.prototype.addDirection = function (delta) {
+        this.direction = this.direction.plus(delta);
+    };
+    Entity.prototype.accelerate = function (v, max) {
+        var mag = Vec2.mag(this.velocity);
+        if (mag > 0 && mag > max) {
+            this.velocity = Vec2.norm(this.velocity).scale(max);
+        }
+        else {
+            this.velocity = this.velocity.plus(this.direction.scale(v));
+        }
     };
     Entity.prototype.setVelocity = function (velocity) {
         this.velocity = velocity;
     };
-    Entity.prototype.reduceVelocity = function (k) {
-        this.velocity = this.velocity.scale(k);
+    Entity.prototype.decelerate = function (v, min) {
         var mag = Vec2.mag(this.velocity);
-        if (mag > 0 && mag < 0.3) {
-            this.velocity = new Vec2(0, 0);
+        console.log(mag);
+        if (mag > 0 && mag < min) {
+            this.resetVelocity();
+        }
+        else {
+            this.velocity = this.velocity.minus(this.velocity.scale(v));
         }
     };
     Entity.prototype.resetVelocity = function () {
@@ -101,10 +123,8 @@ var PunPun = (function (_super) {
     function PunPun() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    PunPun.prototype.contructor = function (pos, velocity, bbox) {
-        this.sprite = new ImageWrapper(Sprites.PunPun);
-    };
     PunPun.prototype.init = function () {
+        this.rendered = true;
         this.sprite = new ImageWrapper(Sprites.PunPun);
     };
     PunPun.prototype.render = function (ctx, frame) {
@@ -113,6 +133,10 @@ var PunPun = (function (_super) {
             ctx.drawImage(this.sprite.getImage(), frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, this.pos.x, this.pos.y, frame.size.x * frame.scale, frame.size.y * frame.scale);
             this.bbox.render(ctx);
         }
+    };
+    PunPun.prototype.renderAnimated = function (ctx) {
+        var frame = this.frames[this.currentFrame];
+        this.render(ctx, frame);
     };
     return PunPun;
 }(Entity));
@@ -146,27 +170,38 @@ var Game = (function () {
         }
         this.render();
     };
-    Game.prototype.update = function (elapsed) {
-        this.player.update();
+    Game.prototype.doInput = function () {
+        var MAX_VELOCITY = 4;
+        this.player.resetDirection();
         if (this.keyboard.isKeyDown(Keys.RIGHT)) {
-            this.player.accelerate(new Vec2(0.15, 0));
+            this.player.addDirection(new Vec2(1, 0));
         }
         if (this.keyboard.isKeyDown(Keys.LEFT)) {
-            this.player.accelerate(new Vec2(-0.15, 0));
+            this.player.addDirection(new Vec2(-1, 0));
         }
         if (this.keyboard.isKeyDown(Keys.DOWN)) {
-            this.player.accelerate(new Vec2(0, 0.15));
+            this.player.addDirection(new Vec2(0, 1));
         }
         if (this.keyboard.isKeyDown(Keys.UP)) {
-            this.player.accelerate(new Vec2(0, -0.15));
+            this.player.addDirection(new Vec2(0, -1));
         }
-        if (this.keyboard.getPresses() == 0) {
-            this.player.reduceVelocity(0.9);
+        if (Vec2.mag(this.player.direction) > 0) {
+            this.player.direction = Vec2.norm(this.player.direction);
         }
+        if (this.keyboard.getPresses() > 0) {
+            this.player.accelerate(0.25, MAX_VELOCITY);
+        }
+        else if (this.keyboard.getPresses() == 0 && this.player.isMoving()) {
+            this.player.decelerate(0.1, 0.1);
+        }
+    };
+    Game.prototype.update = function (elapsed) {
+        this.doInput();
+        this.player.update();
     };
     Game.prototype.render = function () {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
-        var frame = { crop: new Vec2(0, 0), size: new Vec2(13, 17), scale: 4 };
+        var frame = { crop: new Vec2(13, 0), size: new Vec2(18, 17), scale: 4 };
         this.player.render(this.ctx, frame);
     };
     return Game;
@@ -206,12 +241,16 @@ var Keyboard = (function () {
         return this.presses;
     };
     Keyboard.prototype.handleKeydown = function (keycode) {
-        this.keys[keycode] = true;
-        this.presses++;
+        if (!this.keys[keycode]) {
+            this.presses++;
+            this.keys[keycode] = true;
+        }
     };
     Keyboard.prototype.handleKeyup = function (keycode) {
-        this.keys[keycode] = false;
-        this.presses = Math.max(this.presses - 1, 0);
+        if (this.keys[keycode]) {
+            this.presses--;
+            this.keys[keycode] = false;
+        }
     };
     return Keyboard;
 }());
@@ -229,6 +268,9 @@ var Vec2 = (function () {
     };
     Vec2.prototype.plus = function (v) {
         return Vec2.plus(this, v);
+    };
+    Vec2.prototype.minus = function (v) {
+        return Vec2.minus(this, v);
     };
     Vec2.times = function (k, v) {
         return new Vec2(k * v.x, k * v.y);

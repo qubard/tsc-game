@@ -8,7 +8,14 @@ interface SpriteFrame {
     scale: number;
 }
 
+interface Animated {
+    frames: SpriteFrame[];
+    currentFrame: number;
+    renderAnimated(ctx: CanvasRenderingContext2D): void;
+}
+
 interface Renderable {
+    rendered: boolean;
     sprite?: ImageWrapper;
     render(ctx: CanvasRenderingContext2D, frame?: SpriteFrame): void;
 }
