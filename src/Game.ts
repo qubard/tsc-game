@@ -89,6 +89,7 @@ class Game {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         
         this.player.render(this.ctx);
+        this.sample_text.text = "n:"+this.player.getPath().getLength();
         this.sample_text.render(this.ctx);
     }
 }

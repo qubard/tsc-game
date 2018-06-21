@@ -15,6 +15,10 @@ class Entity {
     
     protected init() { }
     
+    getPath(): Path {
+        return this.path;
+    }
+    
     initPath(delay: number) {
         this.path = new Path(delay);
     }

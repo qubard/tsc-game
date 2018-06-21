@@ -1,5 +1,4 @@
 class Path implements Renderable {
-    
     sprite?: ImageWrapper;
     rendered: boolean;
     private nodes: Vec2[];
@@ -13,6 +12,10 @@ class Path implements Renderable {
     
     getDelay(): number {
         return this.delay;
+    }
+    
+    getLength(): number {
+        return this.nodes.length;
     }
     
     addNode(node: Vec2) {
