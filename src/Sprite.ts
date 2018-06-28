@@ -12,7 +12,7 @@ namespace Render {
     
     export class Animation {
         public currentFrame: number = 0;
-        protected delay: number = 1;
+        public frameRate: number = 1;
     }
 
     export interface EntFrames {

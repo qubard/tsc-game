@@ -2,9 +2,9 @@ class Font implements Renderable {
     private glyphs: ImageWrapper;
     rendered: boolean;
     
-    static GLYPH_SIZE:number = 9;
-    static charset:string = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
-    static charset_map:number[] = new Array<number>(255);
+    static GLYPH_SIZE: number = 9;
+    static charset: string = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+    static charset_map: number[] = new Array<number>(255);
     
     constructor(public font: string, public text: string, private scale: number, private dst: Vec2) { 
         this.glyphs = new ImageWrapper(font);

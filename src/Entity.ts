@@ -104,7 +104,7 @@ class Entity implements Renderable {
             let frames = this.animation.getFrames(this.dir, this.facingRight);
             
             if(frames) {
-                let frame = frames[((++this.animation.currentFrame/50) | 0) % frames.length];
+                let frame = frames[((++this.animation.currentFrame/this.animation.frameRate) | 0) % frames.length];
                 if(frame) {
                     this.sprite.draw(ctx, frame, this.pos);
                 }
@@ -126,6 +126,8 @@ class PunPun extends Entity {
     init() {
         this.animation = new Render.EntAnimation();
         this.setBoundingBox(new AABB(this.pos, new Vec2(18,17).scale(4)));
+        
+        this.animation.frameRate = 50;
         
         this.animation.frames.idle_right.push({crop: new Vec2(0,0), size: new Vec2(13,17), scale: 4});
         this.animation.frames.idle_right.push({crop: new Vec2(65,17), size: new Vec2(13,17), scale: 4});
