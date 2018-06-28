@@ -2,84 +2,84 @@ class Game {
     private keyboard: Keyboard;
     private player: PunPun;
     private size: ClientRect;
-    
+
     private timestep: number;
     private delta: number;
     private lastTick: number;
-    
-    private sample_text:Font = new Font(Fonts.TorusSans, "Hi, testing fonts.\\:^)", 4, new Vec2(10, 10));
-    
+
+    private sample_text: Font = new Font(Fonts.TorusSans, "Hi, testing fonts.\\:^)", 4, new Vec2(10, 10));
+
     constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
         this.keyboard = new Keyboard();
-        this.timestep = 1000/fps;
+        this.timestep = 1000 / fps;
         this.delta = 0;
-        
-        this.player = new PunPun(new Vec2(50,50), new Vec2(0,0));
+
+        this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
         this.player.init();
         this.player.setMaxVelocity(1);
         this.player.initPath(50);
-        
+
         Font.init_map();
     }
-    
+
     setSize(size: ClientRect) {
         this.size = size;
     }
-    
+
     getKeyboard(): Keyboard {
         return this.keyboard;
     }
-    
+
     getCanvasContext(): CanvasRenderingContext2D {
         return this.ctx;
     }
-    
+
     loop() {
-        if(this.lastTick == null) {
+        if (this.lastTick == null) {
             this.lastTick = Date.now();
         }
 
         this.delta += Date.now() - this.lastTick;
         this.lastTick = Date.now();
-        
+
         // delta is way too high (missed 10s of ticks, reset otherwise loop is basically infinite)
-        if(this.delta/this.timestep >= this.fps*10) {
+        if (this.delta / this.timestep >= this.fps * 10) {
             this.delta = 0;
         }
-        
-        while(this.delta >= this.timestep) {
+
+        while (this.delta >= this.timestep) {
             this.update(this.timestep);
             this.delta -= this.timestep;
         }
     }
-    
+
     doInput() {
         this.player.resetDirection();
-        
-        if(this.keyboard.isKeyDown(Keys.RIGHT)) {
+
+        if (this.keyboard.isKeyDown(Keys.RIGHT)) {
             this.player.addDirection(new Vec2(1, 0));
         }
-        
-        if(this.keyboard.isKeyDown(Keys.LEFT)) {
+
+        if (this.keyboard.isKeyDown(Keys.LEFT)) {
             this.player.addDirection(new Vec2(-1, 0));
         }
-        
-        if(this.keyboard.isKeyDown(Keys.DOWN)) {
+
+        if (this.keyboard.isKeyDown(Keys.DOWN)) {
             this.player.addDirection(new Vec2(0, 1));
         }
-        
-        if(this.keyboard.isKeyDown(Keys.UP)) {
+
+        if (this.keyboard.isKeyDown(Keys.UP)) {
             this.player.addDirection(new Vec2(0, -1));
         }
-        
+
         // todo: move this
-        if(Vec2.mag(this.player.dir) > 0) {
+        if (Vec2.mag(this.player.dir) > 0) {
             this.player.dir = Vec2.norm(this.player.dir);
         }
-        
-        if(this.keyboard.getPresses() > 0) {
+
+        if (this.keyboard.getPresses() > 0) {
             this.player.accelerate(0.25);
-        } else if(this.keyboard.getPresses() == 0 && this.player.isMoving()) {
+        } else if (this.keyboard.getPresses() == 0 && this.player.isMoving()) {
             this.player.decelerate(0.1, 0.1);
         }
     }
@@ -89,12 +89,12 @@ class Game {
         this.player.update();
         this.render();
     }
-    
+
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
-        
+
         this.player.render(this.ctx);
-        this.sample_text.text = "n:"+(this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses();
+        this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses();
         this.sample_text.render(this.ctx);
     }
 }

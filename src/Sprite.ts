@@ -9,7 +9,7 @@ namespace Render {
         size: Vec2;
         scale: number;
     }
-    
+
     export class Animation {
         public currentFrame: number = 0;
         public frameRate: number = 1;
@@ -27,8 +27,8 @@ namespace Render {
     }
 
     export class EntAnimation extends Animation {
-        frames: EntFrames = {idle_left: [], idle_right: [], move_left: [], move_right: []};
-        
+        frames: EntFrames = { idle_left: [], idle_right: [], move_left: [], move_right: [] };
+
         getFrames(dir: Vec2, facingRight: boolean): SpriteFrame[] {
             return dir.x > 0 ? this.frames.move_right : dir.x < 0 ? this.frames.move_left : facingRight ? this.frames.idle_right : this.frames.idle_left;
         }

@@ -1,22 +1,22 @@
 class Vec2 {
     constructor(public x: number, public y: number) { }
-    
+
     equals(v: Vec2) {
         return this.x == v.x && this.y == v.y;
     }
-    
+
     scale(k: number) {
         return Vec2.times(k, this);
     }
-    
+
     plus(v: Vec2) {
         return Vec2.plus(this, v);
     }
-    
+
     minus(v: Vec2) {
         return Vec2.minus(this, v);
     }
-    
+
     static times(k: number, v: Vec2) {
         return new Vec2(k * v.x, k * v.y);
     }
