@@ -16,7 +16,7 @@ class Game {
         
         this.player = new PunPun(new Vec2(50,50), new Vec2(0,0));
         this.player.init();
-        this.player.setMaxVelocity(2*200/fps);
+        this.player.setMaxVelocity(1.3);
         this.player.initPath(50);
         
         Font.init_map();
@@ -72,8 +72,9 @@ class Game {
             this.player.addDirection(new Vec2(0, -1));
         }
         
-        if(Vec2.mag(this.player.direction) > 0) {
-            this.player.direction = Vec2.norm(this.player.direction);
+        // todo: move this
+        if(Vec2.mag(this.player.dir) > 0) {
+            this.player.dir = Vec2.norm(this.player.dir);
         }
         
         if(this.keyboard.getPresses() > 0) {
@@ -93,7 +94,7 @@ class Game {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         
         this.player.render(this.ctx);
-        this.sample_text.text = "n:"+this.player.getPath().getLength() + "," + this.keyboard.getPresses();
+        this.sample_text.text = "n:"+(this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses();
         this.sample_text.render(this.ctx);
     }
 }

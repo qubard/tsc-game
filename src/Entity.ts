@@ -1,4 +1,4 @@
-class Entity {
+class Entity implements Renderable {
     protected pos: Vec2;
     protected velocity: Vec2 = new Vec2(0,0);
     protected bbox?: AABB; // 2d collision bounding box
@@ -6,7 +6,14 @@ class Entity {
     protected path: Path;
     protected max_velocity: number = 1;
     
-    constructor(pos: Vec2, public direction: Vec2, bbox?: AABB) {
+    protected animation: Render.EntAnimation;
+
+    private facingRight: boolean;
+    
+    sprite: ImageWrapper;
+    rendered: boolean;
+    
+    constructor(pos: Vec2, public dir: Vec2, bbox?: AABB) {
         this.pos = pos;
         this.bbox = bbox;
 
@@ -44,11 +51,18 @@ class Entity {
     }
     
     resetDirection() {
-        this.direction = new Vec2(0, 0);
+        this.dir = new Vec2(0, 0);
     }
     
     addDirection(delta: Vec2) {
-        this.direction = this.direction.plus(delta);
+        this.dir = this.dir.plus(delta);
+        
+        // residual facing direction boolean
+        if(this.dir.x > 0) {
+            this.facingRight = true;
+        } else if(this.dir.x < 0) {
+            this.facingRight = false;
+        }
     }
 
     accelerate(v: number) {
@@ -56,7 +70,7 @@ class Entity {
         if(mag > 0 && mag > this.max_velocity) {
             this.velocity = Vec2.norm(this.velocity).scale(this.max_velocity);
         } else {
-            this.velocity = this.velocity.plus(this.direction.scale(v));
+            this.velocity = this.velocity.plus(this.dir.scale(v));
         }
     }
     
@@ -84,35 +98,51 @@ class Entity {
     collides(ent: Entity): boolean {
         return this.bbox.collides(ent.bbox);
     }
-}
-
-class PunPun extends Entity implements Animated, Renderable {
     
-    sprite: ImageWrapper;
-    currentFrame: number;
-    rendered: boolean;
-    frames: SpriteFrame[];
-    
-    init() {
-        this.currentFrame = 0;
-        this.frames = [];
-        this.setBoundingBox(new AABB(this.pos, new Vec2(18,17).scale(4)));
-        this.frames.push({crop: new Vec2(0,0), size: new Vec2(13,17), scale: 4}); // idle_r
-        this.frames.push({crop: new Vec2(14,0), size: new Vec2(17,17), scale: 4}); // move_r_1
-        this.frames.push({crop: new Vec2(31,0), size: new Vec2(16,17), scale: 4}); // move_r_2
-        this.frames.push({crop: new Vec2(47,0), size: new Vec2(18,15), scale: 4}); // move_r_3
-        this.rendered = true;
-        this.sprite = new ImageWrapper(Sprites.PunPun);
-    }
-
     render(ctx: CanvasRenderingContext2D) {
-        if(ctx != null) {
-            let frame = this.frames[((++this.currentFrame/50) | 0) % (this.frames.length-1) + 1];
-            this.sprite.draw(ctx, frame, this.pos);
-            this.bbox.render(ctx);
+        if(ctx != null && this.rendered) {
+            let frames = this.animation.getFrames(this.dir, this.facingRight);
+            
+            if(frames) {
+                let frame = frames[((++this.animation.currentFrame/50) | 0) % frames.length];
+                if(frame) {
+                    this.sprite.draw(ctx, frame, this.pos);
+                }
+            }
+           
+            if(this.bbox) {
+                this.bbox.render(ctx);
+            }
+            
             if(this.path) {
                 this.path.render(ctx);
             }
         }
     }
+}
+
+class PunPun extends Entity {
+    
+    init() {
+        this.animation = new Render.EntAnimation();
+        this.setBoundingBox(new AABB(this.pos, new Vec2(18,17).scale(4)));
+        
+        this.animation.frames.idle_right.push({crop: new Vec2(0,0), size: new Vec2(13,17), scale: 4});
+        this.animation.frames.idle_right.push({crop: new Vec2(65,17), size: new Vec2(13,17), scale: 4});
+        
+        this.animation.frames.idle_left.push({crop: new Vec2(0,17), size: new Vec2(13,17), scale: 4});
+        this.animation.frames.idle_left.push({crop: new Vec2(78,17), size: new Vec2(14,17), scale: 4});
+        
+        this.animation.frames.move_left.push({crop: new Vec2(13,17), size: new Vec2(17,17), scale: 4});
+        this.animation.frames.move_left.push({crop: new Vec2(31,17), size: new Vec2(16,17), scale: 4});
+        this.animation.frames.move_left.push({crop: new Vec2(47,17), size: new Vec2(18,15), scale: 4});
+        
+        this.animation.frames.move_right.push({crop: new Vec2(13,0), size: new Vec2(17,17), scale: 4});
+        this.animation.frames.move_right.push({crop: new Vec2(31,0), size: new Vec2(16,17), scale: 4});
+        this.animation.frames.move_right.push({crop: new Vec2(47,0), size: new Vec2(18,15), scale: 4});
+        
+        this.rendered = true;
+        this.sprite = new ImageWrapper(Sprites.PunPun);
+    }
+
 }

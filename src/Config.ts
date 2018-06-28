@@ -4,9 +4,9 @@ enum CanvasParams {
 }
 
 enum Sprites {
-    PunPun = 'stahlsby.png'
+    PunPun = 'res/stahlsby.png'
 }
 
 enum Fonts {
-    TorusSans = 'TorusSans.png'
+    TorusSans = 'res/TorusSans.png'
 }

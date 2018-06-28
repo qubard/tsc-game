@@ -31,7 +31,7 @@ class Path implements Renderable {
         this.nodes = [];
     }
     
-    render(ctx: CanvasRenderingContext2D, frame?: SpriteFrame) {
+    render(ctx: CanvasRenderingContext2D, frame?: Render.SpriteFrame) {
         if(ctx != null && this.rendered) {
             ctx.strokeStyle = "#FF0000";
             for(var i = 0; i < this.nodes.length-1; i++) {
