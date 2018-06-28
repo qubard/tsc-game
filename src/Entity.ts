@@ -1,4 +1,4 @@
-class Entity implements Renderable {
+class Entity {
     protected pos: Vec2;
     protected velocity: Vec2 = new Vec2(0,0);
     protected bbox?: AABB; // 2d collision bounding box
@@ -6,12 +6,7 @@ class Entity implements Renderable {
     protected path: Path;
     protected max_velocity: number = 1;
     
-    protected animation: Render.EntAnimation;
-
-    private facingRight: boolean;
-    
-    sprite: ImageWrapper;
-    rendered: boolean;
+    protected facingRight: boolean;
     
     constructor(pos: Vec2, public dir: Vec2, bbox?: AABB) {
         this.pos = pos;
@@ -97,26 +92,5 @@ class Entity implements Renderable {
 	
     collides(ent: Entity): boolean {
         return this.bbox.collides(ent.bbox);
-    }
-    
-    render(ctx: CanvasRenderingContext2D) {
-        if(ctx != null && this.rendered) {
-            let frames = this.animation.getFrames(this.dir, this.facingRight);
-            
-            if(frames) {
-                let frame = frames[((++this.animation.currentFrame/this.animation.frameRate) | 0) % frames.length];
-                if(frame) {
-                    this.sprite.draw(ctx, frame, this.pos);
-                }
-            }
-           
-            if(this.bbox) {
-                this.bbox.render(ctx);
-            }
-            
-            if(this.path) {
-                this.path.render(ctx);
-            }
-        }
     }
 }

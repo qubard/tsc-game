@@ -1,4 +1,4 @@
-class PunPun extends Entity {
+class PunPun extends EntityRenderable {
     init() {
         this.animation = new Render.EntAnimation();
         this.setBoundingBox(new AABB(this.pos, new Vec2(18,17).scale(4)));
@@ -8,10 +8,12 @@ class PunPun extends Entity {
         this.animation.frames.idle_right.push({crop: new Vec2(0,0), size: new Vec2(13,17), scale: 4});
         this.animation.frames.idle_right.push({crop: new Vec2(65,17), size: new Vec2(13,17), scale: 4});
         this.animation.frames.idle_right.push({crop: new Vec2(78,17), size: new Vec2(13,17), scale: 4});
+        this.animation.frames.idle_right.push({crop: new Vec2(65,17), size: new Vec2(13,17), scale: 4});
         
         this.animation.frames.idle_left.push({crop: new Vec2(0,17), size: new Vec2(13,17), scale: 4});
         this.animation.frames.idle_left.push({crop: new Vec2(105,17), size: new Vec2(13,17), scale: 4});
         this.animation.frames.idle_left.push({crop: new Vec2(92,17), size: new Vec2(13,17), scale: 4});
+        this.animation.frames.idle_left.push({crop: new Vec2(105,17), size: new Vec2(13,17), scale: 4});
         
         this.animation.frames.move_left.push({crop: new Vec2(13,17), size: new Vec2(17,17), scale: 4});
         this.animation.frames.move_left.push({crop: new Vec2(31,17), size: new Vec2(16,17), scale: 4});
