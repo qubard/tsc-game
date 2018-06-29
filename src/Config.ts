@@ -1,5 +1,5 @@
 enum CanvasParams {
-    FPS = 400,
+    FPS = 128,
     CanvasID = "canvas"
 }
 

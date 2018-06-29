@@ -3,7 +3,7 @@ class PunPun extends EntityRenderable {
         this.animation = new Render.EntAnimation();
         this.setBoundingBox(new AABB(this.pos, new Vec2(18, 17).scale(4)));
 
-        this.animation.frameRate = 100;
+        this.animation.frameRate = 50;
 
         this.animation.frames.idle_right.push({ crop: new Vec2(0, 0), size: new Vec2(13, 17), scale: 4 });
         this.animation.frames.idle_right.push({ crop: new Vec2(65, 17), size: new Vec2(13, 17), scale: 4 });

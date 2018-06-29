@@ -16,8 +16,8 @@ class Game {
 
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
         this.player.init();
-        this.player.setMaxVelocity(1);
-        this.player.initPath(50);
+        this.player.setMaxVelocity(3);
+        this.player.initPath(100);
 
         Font.init_map();
     }
