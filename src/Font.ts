@@ -1,6 +1,6 @@
 class Font implements Renderable {
     private glyphs: ImageWrapper;
-    rendered: boolean;
+    rendered: boolean = true;
 
     static GLYPH_SIZE: number = 9;
     static charset: string = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
@@ -8,7 +8,6 @@ class Font implements Renderable {
 
     constructor(public font: string, public text: string, private scale: number, private dst: Vec2) {
         this.glyphs = new ImageWrapper(font);
-        this.rendered = true;
     }
 
     static init_map() {
