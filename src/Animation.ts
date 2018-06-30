@@ -1,45 +1,63 @@
 namespace Render {
     export class Animation {
-        public currentFrame: number = 0;
-        public frameRate: number = 1;
+        private currentFrame: number = 0;
+        private frames: SpriteFrame[] = [];
+
+        constructor(private framerate: number) { }
+
+        pushFrame(frame: SpriteFrame) {
+            this.frames.push(frame);
+        }
+
+        getFrames(): SpriteFrame[] {
+            return this.frames;
+        }
+
+        getFrameRate(): number {
+            return this.framerate;
+        }
+
+        getCurrentFrame(): number {
+            return this.currentFrame;
+        }
+        
+        reset() {
+            this.currentFrame = 0;
+        }
+
+        getFrameIncrement(): number {
+            return this.currentFrame++;
+        }
     }
 
-    // Entities have directional animations, so each direction needs a SpriteFrame[]
-    export interface EntFrames {
-        active: SpriteFrame[]; // the active SpriteFrame[] for switching
-        idle_left: SpriteFrame[];
-        idle_right: SpriteFrame[];
-        move_left: SpriteFrame[];
-        move_right: SpriteFrame[];
-    }
+    export class EntityAnimation {
+        active: Animation;
+        idle_left: Animation;
+        idle_right: Animation;
+        move_left: Animation;
+        move_right: Animation;
 
-    export class StaticAnimation extends Animation {
-        frames: SpriteFrame[];
-    }
-
-    export class EntAnimation extends Animation {
-        frames: EntFrames = { active: [], idle_left: [], idle_right: [], move_left: [], move_right: [] };
-
-        getFrames(dir: Vec2, facingRight: boolean): SpriteFrame[] {
+        // Get the directed animation
+        getAnimation(dir: Vec2, facingRight: boolean): Animation {
             let ret = null;
-            if(dir.x > 0) {
-                ret = this.frames.move_right;
-            } else if(dir.x < 0) {
-                ret = this.frames.move_left;
+            if (dir.x > 0) {
+                ret = this.move_right;
+            } else if (dir.x < 0) {
+                ret = this.move_left;
             } else {
-                if(facingRight) {
-                  ret = this.frames.idle_right;  
+                if (facingRight) {
+                    ret = this.idle_right;
                 } else {
-                  ret = this.frames.idle_left;
+                    ret = this.idle_left;
                 }
             }
-            
+
             // Reset the current frame if the active frame changes (within the getter itself)
-            if(ret != this.frames.active) {
-                this.frames.active = ret;
-                this.currentFrame = 0;
+            if (ret != this.active) {
+                this.active.reset();
+                this.active = ret;
             }
-            
+
             return ret;
         }
     }

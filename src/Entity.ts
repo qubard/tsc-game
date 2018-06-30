@@ -1,14 +1,12 @@
 class Entity {
-    protected pos: Vec2;
     protected velocity: Vec2 = new Vec2(0, 0);
-    protected bbox?: AABB; // 2d collision bounding box
 
     protected path: Path;
     protected max_velocity: number = 1;
 
     protected facingRight: boolean;
 
-    constructor(pos: Vec2, public dir: Vec2, bbox?: AABB) {
+    constructor(protected pos: Vec2, public dir: Vec2, protected bbox?: AABB) {
         this.pos = pos;
         this.bbox = bbox;
 
@@ -28,9 +26,11 @@ class Entity {
     update() {
         if (this.isMoving()) {
             this.pos = this.pos.plus(this.velocity);
+
             if (this.bbox) {
                 this.bbox.update(this.pos);
             }
+
             if (this.path) {
                 this.path.addNode(this.pos);
             }

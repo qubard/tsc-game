@@ -1,15 +1,16 @@
 class EntityRenderable extends Entity implements Renderable {
-    protected animation: Render.EntAnimation;
+    protected animation: Render.EntityAnimation;
 
     sprite: ImageWrapper;
-    rendered: boolean;
+    rendered: boolean = true;
 
     render(ctx: CanvasRenderingContext2D) {
         if (ctx != null && this.rendered) {
-            let frames = this.animation.getFrames(this.dir, this.facingRight);
+            let animation = this.animation.getAnimation(this.dir, this.facingRight);
+            let frames = animation.getFrames();
 
             if (frames) {
-                let frame = frames[((++this.animation.currentFrame / this.animation.frameRate) | 0) % frames.length];
+                let frame = frames[((animation.getFrameIncrement() / animation.getFrameRate()) | 0) % frames.length];
                 if (frame) {
                     this.sprite.draw(ctx, frame, this.pos);
                 }
