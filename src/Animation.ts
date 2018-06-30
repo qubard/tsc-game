@@ -21,7 +21,7 @@ namespace Render {
             return this.currentFrame;
         }
         
-        reset() {
+        resetFrame() {
             this.currentFrame = 0;
         }
 
@@ -54,7 +54,9 @@ namespace Render {
 
             // Reset the current frame if the active frame changes (within the getter itself)
             if (ret != this.active) {
-                this.active.reset();
+                if(this.active) {
+                    this.active.resetFrame();        
+                }
                 this.active = ret;
             }
 
