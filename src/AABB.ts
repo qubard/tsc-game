@@ -1,9 +1,7 @@
 class AABB implements Renderable {
-    rendered: boolean;
+    rendered: boolean = true;
 
-    constructor(private pos: Vec2, private size: Vec2) {
-        this.rendered = true; // enable for debugging
-    }
+    constructor(private pos: Vec2, private size: Vec2) { }
 
     update(pos: Vec2): void {
         this.pos = pos;
