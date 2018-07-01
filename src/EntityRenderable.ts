@@ -10,7 +10,7 @@ class EntityRenderable extends Entity implements Renderable {
 
     // Get the directed animation
     private getAnimation(dir: Vec2, facingRight: boolean): Render.Animation {
-        let ret = this.active;
+        let ret = null;
         if (dir.x > 0) {
             ret = this.move_right;
         } else if (dir.x < 0) {
