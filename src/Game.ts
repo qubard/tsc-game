@@ -1,6 +1,6 @@
 class Game {
     private keyboard: Keyboard;
-    private player: PunPun;
+    private player: EntityRenderable;
     private size: ClientRect;
 
     private timestep: number;
@@ -15,8 +15,7 @@ class Game {
         this.delta = 0;
 
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
-        this.player.setMaxVelocity(3);
-
+        
         Font.init_map();
     }
 

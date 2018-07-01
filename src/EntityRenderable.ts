@@ -2,7 +2,7 @@ class EntityRenderable extends Entity implements Renderable {
     sprite: ImageWrapper;
     rendered: boolean = true;
     
-    private active: Render.Animation;
+    private active: Render.Animation = null;
     protected idle_left: Render.Animation;
     protected idle_right: Render.Animation;
     protected move_left: Render.Animation;
@@ -10,17 +10,13 @@ class EntityRenderable extends Entity implements Renderable {
 
     // Get the directed animation
     private getAnimation(dir: Vec2, facingRight: boolean): Render.Animation {
-        let ret = null;
+        let ret = this.active;
         if (dir.x > 0) {
             ret = this.move_right;
         } else if (dir.x < 0) {
             ret = this.move_left;
         } else {
-            if (facingRight) {
-                ret = this.idle_right;
-            } else {
-                ret = this.idle_left;
-            }
+            ret = Math.abs(dir.y) == 0 ? facingRight ? this.idle_right : this.idle_left : facingRight ? this.move_right : this.move_left;
         }
 
         // Reset the current frame if the active frame changes (within the getter itself)

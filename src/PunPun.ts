@@ -6,7 +6,9 @@ class PunPun extends EntityRenderable {
         this.idle_right = new Render.Animation(40);
         this.idle_left = new Render.Animation(40);
         this.move_left = new Render.Animation(20);
-        this.move_right = new Render.Animation(20);
+        this.move_right = new Render.Animation(30);
+        
+        this.setMaxVelocity(1);
 
         let scale = 4;
         let size = new Vec2(18,17);

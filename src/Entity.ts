@@ -9,12 +9,8 @@ class Entity {
     constructor(protected pos: Vec2, public dir: Vec2, protected bbox?: AABB) {
         this.pos = pos;
         this.bbox = bbox;
-
-        this.init();
     }
-
-    protected init() { }
-
+    
     getPath(): Path {
         return this.path;
     }
