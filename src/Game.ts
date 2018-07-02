@@ -7,7 +7,7 @@ class Game {
     private delta: number;
     private lastTick: number;
 
-    private sample_text: Font = new Font(Fonts.TorusSans, "Hi, testing fonts.\\:^)", 4, new Vec2(10, 10));
+    private sample_text: Font = new Font(Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
 
     constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
         this.keyboard = new Keyboard();
@@ -90,7 +90,7 @@ class Game {
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         this.player.render(this.ctx);
-        this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses();
+        this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses() + "\ntesting Victoria & newlines.\nhello";
         this.sample_text.render(this.ctx);
     }
 }

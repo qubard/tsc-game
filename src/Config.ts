@@ -8,5 +8,6 @@ enum Sprites {
 }
 
 enum Fonts {
-    TorusSans = 'res/TorusSans.png'
+    TorusSans = 'res/fonts/TorusSans.png',
+    Victoria = 'res/fonts/Victoria.png'
 }

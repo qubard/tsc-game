@@ -35,7 +35,7 @@ class MotionBlur implements Renderable {
                 var buff = this.spriteBuffer.get(i);
                 if (buff) {
                     ctx.save();
-                    ctx.globalAlpha = Math.max(0.1, i/this.spriteBuffer.getLength()-0.4);
+                    ctx.globalAlpha = Math.max(0, 1-(i+1)/this.spriteBuffer.getLength());
                     this.sprite.draw(ctx, buff.frame, buff.pos);
                     ctx.restore();
                 }

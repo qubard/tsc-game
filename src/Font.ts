@@ -19,9 +19,18 @@ class Font implements Renderable {
 
     render(ctx: CanvasRenderingContext2D) {
         if (ctx != null && this.rendered) {
+            let posy = this.dst.y;
+            let orig_x = this.dst.x;
+            let posx = this.dst.x;
             for (var i = 0; i < this.text.length; i++) {
-                let x = Font.charset_map[Number(this.text.charCodeAt(i))];
-                ctx.drawImage(this.glyphs.getImage(), x, 0, Font.GLYPH_SIZE, Font.GLYPH_SIZE, this.dst.x + i * Font.GLYPH_SIZE * this.scale, this.dst.y, Font.GLYPH_SIZE * this.scale, Font.GLYPH_SIZE * this.scale);
+                if(this.text[i] != '\n') {
+                    let x = Font.charset_map[Number(this.text.charCodeAt(i))];
+                    ctx.drawImage(this.glyphs.getImage(), x, 0, Font.GLYPH_SIZE, Font.GLYPH_SIZE, posx, posy, Font.GLYPH_SIZE * this.scale, Font.GLYPH_SIZE * this.scale);
+                    posx += Font.GLYPH_SIZE * this.scale;
+                } else {
+                    posx = orig_x;
+                    posy += Font.GLYPH_SIZE * this.scale;
+                }
             }
         }
     }

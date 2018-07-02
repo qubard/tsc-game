@@ -35,7 +35,7 @@ class EntityRenderable extends Entity implements Renderable {
     render(ctx: CanvasRenderingContext2D) {
         if (ctx != null && this.rendered && this.sprite) {
             let animation = this.getAnimation(this.dir, this.facingRight);
-            let frames = animation.getFrames(); 
+            let frames = animation.getFrames();
 
             if (frames) {
                 let frame = frames[((animation.getFrameIncrement() / animation.getFrameRate()) | 0) % frames.length];
