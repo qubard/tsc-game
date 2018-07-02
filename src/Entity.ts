@@ -10,7 +10,7 @@ class Entity {
         this.pos = pos;
         this.bbox = bbox;
     }
-    
+
     getPath(): Path {
         return this.path;
     }

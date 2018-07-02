@@ -23,7 +23,7 @@ class Font implements Renderable {
             let orig_x = this.dst.x;
             let posx = this.dst.x;
             for (var i = 0; i < this.text.length; i++) {
-                if(this.text[i] != '\n') {
+                if (this.text[i] != '\n') {
                     let x = Font.charset_map[Number(this.text.charCodeAt(i))];
                     ctx.drawImage(this.glyphs.getImage(), x, 0, Font.GLYPH_SIZE, Font.GLYPH_SIZE, posx, posy, Font.GLYPH_SIZE * this.scale, Font.GLYPH_SIZE * this.scale);
                     posx += Font.GLYPH_SIZE * this.scale;

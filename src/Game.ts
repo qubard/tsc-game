@@ -7,15 +7,19 @@ class Game {
     private delta: number;
     private lastTick: number;
 
+    private console: GConsole;
+
     private sample_text: Font = new Font(Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
+
 
     constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
         this.keyboard = new Keyboard();
+        this.console = new GConsole(new Vec2(10, 10), 5, true, 0.5);
         this.timestep = 1000 / fps;
         this.delta = 0;
 
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
-        
+
         Font.init_map();
     }
 
@@ -42,6 +46,7 @@ class Game {
         // delta is way too high (missed 10s of ticks, reset otherwise loop is basically infinite)
         if (this.delta / this.timestep >= this.fps * 10) {
             this.delta = 0;
+            this.console.log("Resetting delta timestep, 10s of ticks missed");
         }
 
         while (this.delta >= this.timestep) {
@@ -80,17 +85,21 @@ class Game {
             this.player.decelerate(0.1, 0.1);
         }
     }
+    
+    i: number = 0;
 
     update(elapsed: number) {
         this.doInput();
         this.player.update();
         this.render();
+        this.console.log("Game::update(" + (this.i++/100 | 0) + ")");
     }
 
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         this.player.render(this.ctx);
-        this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses() + "\ntesting Victoria & newlines.\nhello";
-        this.sample_text.render(this.ctx);
+        this.console.render(this.ctx);
+        /*this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses() + "\ntesting Victoria & newlines.\nhello";
+        this.sample_text.render(this.ctx);*/
     }
 }

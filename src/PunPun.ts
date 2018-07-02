@@ -7,24 +7,24 @@ class PunPun extends EntityRenderable {
         this.idle_left = new Render.Animation(50);
         this.move_left = new Render.Animation(30);
         this.move_right = new Render.Animation(30);
-                
+
         this.sprite = new ImageWrapper(Sprites.PunPun);
-        
+
         this.blur = new MotionBlur(30, 100); // capacity and feed delay (ms) as arguments
         this.blur.setSprite(this.sprite);
-        
+
         this.setMaxVelocity(2);
 
         let scale = 4;
-        let size = new Vec2(18,17);
-        
+        let size = new Vec2(18, 17);
+
         this.setBoundingBox(new AABB(this.pos, size.scale(scale)));
-        
+
         this.idle_right.pushFrame(SpriteHelper.frameAt(0, size, scale));
         this.idle_right.pushFrame(SpriteHelper.frameAt(8, size, scale));
         this.idle_right.pushFrame(SpriteHelper.frameAt(9, size, scale));
         this.idle_right.pushFrame(SpriteHelper.frameAt(8, size, scale));
-        
+
         this.idle_left.pushFrame(SpriteHelper.frameAt(4, size, scale));
         this.idle_left.pushFrame(SpriteHelper.frameAt(11, size, scale));
         this.idle_left.pushFrame(SpriteHelper.frameAt(10, size, scale));

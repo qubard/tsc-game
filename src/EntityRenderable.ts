@@ -1,13 +1,13 @@
 class EntityRenderable extends Entity implements Renderable {
     sprite: ImageWrapper;
     rendered: boolean = true;
-    
+
     private active: Render.Animation = null;
     protected idle_left: Render.Animation;
     protected idle_right: Render.Animation;
     protected move_left: Render.Animation;
     protected move_right: Render.Animation;
-    
+
     protected blur: MotionBlur;
 
     // Get the directed animation
@@ -40,14 +40,14 @@ class EntityRenderable extends Entity implements Renderable {
             if (frames) {
                 let frame = frames[((animation.getFrameIncrement() / animation.getFrameRate()) | 0) % frames.length];
                 if (frame) {
-                    if(this.blur) {
+                    if (this.blur) {
                         this.blur.render(ctx);
                         this.blur.feed({ pos: this.pos, frame: frame });
                     }
                     this.sprite.draw(ctx, frame, this.pos);
                 }
             }
-            
+
             if (this.bbox) {
                 this.bbox.render(ctx);
             }
@@ -55,7 +55,7 @@ class EntityRenderable extends Entity implements Renderable {
             if (this.path) {
                 this.path.render(ctx);
             }
-            
+
         }
     }
 }
