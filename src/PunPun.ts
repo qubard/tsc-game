@@ -3,12 +3,17 @@ class PunPun extends EntityRenderable {
     constructor(protected pos: Vec2, public dir: Vec2, protected bbox?: AABB) {
         super(pos, dir, bbox);
 
-        this.idle_right = new Render.Animation(40);
-        this.idle_left = new Render.Animation(40);
-        this.move_left = new Render.Animation(20);
+        this.idle_right = new Render.Animation(50);
+        this.idle_left = new Render.Animation(50);
+        this.move_left = new Render.Animation(30);
         this.move_right = new Render.Animation(30);
+                
+        this.sprite = new ImageWrapper(Sprites.PunPun);
         
-        this.setMaxVelocity(1);
+        this.blur = new MotionBlur(30, 100); // capacity and feed delay (ms) as arguments
+        this.blur.setSprite(this.sprite);
+        
+        this.setMaxVelocity(2);
 
         let scale = 4;
         let size = new Vec2(18,17);
@@ -34,7 +39,5 @@ class PunPun extends EntityRenderable {
         this.move_right.pushFrame(SpriteHelper.frameAt(2, size, scale));
         this.move_right.pushFrame(SpriteHelper.frameAt(3, size, scale));
         this.move_right.pushFrame(SpriteHelper.frameAt(2, size, scale));
-        
-        this.sprite = new ImageWrapper(Sprites.PunPun);
     }
 }

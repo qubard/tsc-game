@@ -89,7 +89,6 @@ class Game {
 
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
-
         this.player.render(this.ctx);
         this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses();
         this.sample_text.render(this.ctx);

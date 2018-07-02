@@ -7,10 +7,12 @@ class EntityRenderable extends Entity implements Renderable {
     protected idle_right: Render.Animation;
     protected move_left: Render.Animation;
     protected move_right: Render.Animation;
+    
+    protected blur: MotionBlur;
 
     // Get the directed animation
     private getAnimation(dir: Vec2, facingRight: boolean): Render.Animation {
-        let ret = null;
+        let ret = this.active;
         if (dir.x > 0) {
             ret = this.move_right;
         } else if (dir.x < 0) {
@@ -31,17 +33,21 @@ class EntityRenderable extends Entity implements Renderable {
     }
 
     render(ctx: CanvasRenderingContext2D) {
-        if (ctx != null && this.rendered) {
+        if (ctx != null && this.rendered && this.sprite) {
             let animation = this.getAnimation(this.dir, this.facingRight);
-            let frames = animation.getFrames();
+            let frames = animation.getFrames(); 
 
             if (frames) {
                 let frame = frames[((animation.getFrameIncrement() / animation.getFrameRate()) | 0) % frames.length];
                 if (frame) {
+                    if(this.blur) {
+                        this.blur.render(ctx);
+                        this.blur.feed({ pos: this.pos, frame: frame });
+                    }
                     this.sprite.draw(ctx, frame, this.pos);
                 }
             }
-
+            
             if (this.bbox) {
                 this.bbox.render(ctx);
             }
@@ -49,6 +55,7 @@ class EntityRenderable extends Entity implements Renderable {
             if (this.path) {
                 this.path.render(ctx);
             }
+            
         }
     }
 }
