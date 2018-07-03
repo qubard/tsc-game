@@ -3,7 +3,7 @@ class Font implements Renderable {
     rendered: boolean = true;
 
     static GLYPH_SIZE: number = 9;
-    static charset: string = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+    static charset: string = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ';
     static charset_map: number[] = new Array<number>(255);
 
     constructor(public font: string, public text: string, private scale: number, private dst: Vec2) {
@@ -13,7 +13,8 @@ class Font implements Renderable {
     static init_map() {
         for (var i = 0; i < Font.charset.length; i++) {
             let v = Number(Font.charset.charCodeAt(i));
-            Font.charset_map[v] = i * Font.GLYPH_SIZE;
+            Font.charset_map[v] = i * Font.GLYPH_SIZE; // map the cropped position of the glyph
+            console.log(v);
         }
     }
 

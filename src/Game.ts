@@ -14,7 +14,7 @@ class Game {
 
     constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
         this.keyboard = new Keyboard();
-        this.console = new GConsole(new Vec2(10, 10), 5, true, 0.5);
+        this.console = new GConsole(new Vec2(10, 10), 50, 1, true, 0.5);
         this.timestep = 1000 / fps;
         this.delta = 0;
 
@@ -86,13 +86,11 @@ class Game {
         }
     }
     
-    i: number = 0;
-
     update(elapsed: number) {
         this.doInput();
         this.player.update();
         this.render();
-        this.console.log("Game::update(" + (this.i++/100 | 0) + ")");
+        this.console.log("(x,y)=" + (this.player.getPos().x | 0) + ","  + (this.player.getPos().y | 0));
     }
 
     render() {

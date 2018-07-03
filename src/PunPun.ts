@@ -10,7 +10,7 @@ class PunPun extends EntityRenderable {
 
         this.sprite = new ImageWrapper(Sprites.PunPun);
 
-        this.blur = new MotionBlur(30, 100); // capacity and feed delay (ms) as arguments
+        this.blur = new MotionBlur(5, 100); // capacity and feed delay (ms) as arguments
         this.blur.setSprite(this.sprite);
 
         this.setMaxVelocity(2);
