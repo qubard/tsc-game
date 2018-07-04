@@ -1,4 +1,6 @@
-namespace Render {
+import { SpriteFrame } from "./Sprite";
+
+export namespace Render {
     export class Animation {
         private currentFrame: number = 0;
         private frames: SpriteFrame[] = [];

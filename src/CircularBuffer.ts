@@ -1,5 +1,5 @@
 // See https://en.wikipedia.org/wiki/Circular_buffer#Circular_buffer_mechanics
-class CircularBuffer<T> {
+export class CircularBuffer<T> {
 
     private arr: T[];
     private front: number = 0;

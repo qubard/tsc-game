@@ -1,4 +1,11 @@
-class EntityRenderable extends Entity implements Renderable {
+import { Renderable } from "./Sprite";
+import { ImageWrapper } from "./ImageWrapper";
+import { Entity } from "./Entity";
+import { Render } from "./Animation";
+import { Vec2 } from "./Vec2";
+import { MotionBlur } from "./MotionBlur";
+
+export class EntityRenderable extends Entity implements Renderable {
     sprite: ImageWrapper;
     rendered: boolean = true;
 

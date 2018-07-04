@@ -1,4 +1,10 @@
-class GConsole implements Renderable {
+import { Font } from "./Font";
+import { Renderable } from "./Sprite";
+import { Vec2 } from "./Vec2";
+import { Config } from "./Config";
+import { CircularBuffer } from "./CircularBuffer";
+
+export class GameConsole implements Renderable {
     rendered: boolean = true;
 
     private buffer: CircularBuffer<string>;
@@ -8,7 +14,7 @@ class GConsole implements Renderable {
 
     constructor(private pos: Vec2, private capacity: number, private scale: number, private duplicateChecking: boolean = false, private alpha: number = 1) {
         this.buffer = new CircularBuffer<string>(capacity);
-        this.font = new Font(Fonts.Victoria, "", this.scale, pos);
+        this.font = new Font(Config.Fonts.Victoria, "", this.scale, pos);
         this.alpha = Math.min(Math.max(0, this.alpha), 1); // clamp alpha
     }
 

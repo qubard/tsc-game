@@ -1,4 +1,13 @@
-class PunPun extends EntityRenderable {
+import { Vec2 } from './Vec2';
+import { ImageWrapper } from './ImageWrapper';
+import { AABB } from './AABB';
+import { Config } from './Config'
+import { SpriteHelper } from './Sprite'
+import { EntityRenderable } from './EntityRenderable';
+import { Render } from './Animation';
+import { MotionBlur } from './MotionBlur';
+
+export class PunPun extends EntityRenderable {
 
     constructor(protected pos: Vec2, public dir: Vec2, protected bbox?: AABB) {
         super(pos, dir, bbox);
@@ -8,7 +17,7 @@ class PunPun extends EntityRenderable {
         this.move_left = new Render.Animation(30);
         this.move_right = new Render.Animation(30);
 
-        this.sprite = new ImageWrapper(Sprites.PunPun);
+        this.sprite = new ImageWrapper(Config.Sprites.PunPun);
 
         this.blur = new MotionBlur(5, 100); // capacity and feed delay (ms) as arguments
         this.blur.setSprite(this.sprite);

@@ -1,4 +1,11 @@
-class Game {
+import { Vec2 } from './Vec2';
+import { Font } from './Font';
+import { PunPun } from './PunPun';
+import { Config } from './Config'
+import { EntityRenderable } from './EntityRenderable';
+import { GameConsole } from './GameConsole';
+
+export class Game {
     private keyboard: Keyboard;
     private player: EntityRenderable;
     private size: ClientRect;
@@ -6,15 +13,14 @@ class Game {
     private timestep: number;
     private delta: number;
     private lastTick: number;
-
-    private console: GConsole;
-
-    private sample_text: Font = new Font(Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
-
+    
+    private gameConsole: GameConsole;
+    
+    private sample_text: Font = new Font(Config.Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
 
     constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
         this.keyboard = new Keyboard();
-        this.console = new GConsole(new Vec2(10, 10), 50, 1, true, 0.5);
+        this.gameConsole = new GameConsole(new Vec2(10, 10), 50, 1, true, 0.5);
         this.timestep = 1000 / fps;
         this.delta = 0;
 
@@ -46,7 +52,7 @@ class Game {
         // delta is way too high (missed 10s of ticks, reset otherwise loop is basically infinite)
         if (this.delta / this.timestep >= this.fps * 10) {
             this.delta = 0;
-            this.console.log("Resetting delta timestep, 10s of ticks missed");
+            this.gameConsole.log("Resetting delta timestep, 10s of ticks missed");
         }
 
         while (this.delta >= this.timestep) {
@@ -90,14 +96,12 @@ class Game {
         this.doInput();
         this.player.update();
         this.render();
-        this.console.log("(x,y)=" + (this.player.getPos().x | 0) + ","  + (this.player.getPos().y | 0));
+        this.gameConsole.log("(x,y)=" + (this.player.getPos().x | 0) + ","  + (this.player.getPos().y | 0));
     }
 
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         this.player.render(this.ctx);
-        this.console.render(this.ctx);
-        /*this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses() + "\ntesting Victoria & newlines.\nhello";
-        this.sample_text.render(this.ctx);*/
+        this.gameConsole.render(this.ctx);
     }
 }

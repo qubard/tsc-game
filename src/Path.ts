@@ -1,4 +1,8 @@
-class Path implements Renderable {
+import { Vec2 } from "./Vec2";
+import { ImageWrapper } from "./ImageWrapper";
+import { SpriteFrame, Renderable } from "./Sprite";
+
+export class Path implements Renderable {
     sprite?: ImageWrapper;
     rendered: boolean;
     private nodes: Vec2[];

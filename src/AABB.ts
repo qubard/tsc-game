@@ -1,4 +1,7 @@
-class AABB implements Renderable {
+import { Vec2 } from "./Vec2";
+import { Renderable } from "./Sprite";
+
+export class AABB implements Renderable {
     rendered: boolean = true;
 
     constructor(private pos: Vec2, private size: Vec2) { }

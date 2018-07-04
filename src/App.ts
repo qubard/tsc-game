@@ -1,11 +1,14 @@
+import { Config } from "./Config"
+import { Game } from "./Game"
+
 var game: Game;
 
 window.onload = () => {
-    var canvas = <HTMLCanvasElement>document.getElementById(CanvasParams.CanvasID);
+    var canvas = <HTMLCanvasElement>document.getElementById(Config.CanvasParams.CanvasID);
     var ctx: CanvasRenderingContext2D = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false; // enable nearest neighbor scaling
 
-    game = new Game(ctx, CanvasParams.FPS);
+    game = new Game(ctx, Config.CanvasParams.FPS);
     game.setSize(canvas.getBoundingClientRect());
     init();
 }

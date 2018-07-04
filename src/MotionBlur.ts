@@ -1,10 +1,15 @@
+import { ImageWrapper } from "./ImageWrapper";
+import { Renderable, SpriteFrame } from "./Sprite";
+import { Vec2 } from "./Vec2";
+import { CircularBuffer } from "./CircularBuffer";
+
 // Need a position associated with a SpriteFrame
 interface BufferFrame {
     pos: Vec2;
     frame: SpriteFrame;
 }
 
-class MotionBlur implements Renderable {
+export class MotionBlur implements Renderable {
     rendered: boolean = true;
 
     private spriteBuffer: CircularBuffer<BufferFrame>; // wrap-around buffer for sprite frames
