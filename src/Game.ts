@@ -11,6 +11,7 @@ export class Game {
     private player: EntityRenderable;
     private size: ClientRect;
 
+    private fps: number;
     private timestep: number;
     private delta: number;
     private lastTick: number;
@@ -19,10 +20,11 @@ export class Game {
 
     private sample_text: Font = new Font(Config.Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
 
-    constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
+    constructor(private ctx: CanvasRenderingContext2D) {
+        this.fps = Config.GameParams.FPS;
         this.keyboard = new Keyboard();
         this.gameConsole = new GameConsole(new Vec2(10, 10), 50, 1, true, 0.5);
-        this.timestep = 1000 / fps;
+        this.timestep = 1000 / this.fps;
         this.delta = 0;
 
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
