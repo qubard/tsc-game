@@ -1,11 +1,11 @@
-enum Keys {
+export enum Keys {
     RIGHT = 39,
     LEFT = 37,
     UP = 38,
     DOWN = 40
 }
 
-class Keyboard {
+export class Keyboard {
     private keys: boolean[]; // Key press table
     private valid_keys: boolean[]; // Keep track of valid keys
 

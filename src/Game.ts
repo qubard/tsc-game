@@ -1,21 +1,30 @@
-class Game {
+import { Keyboard, Keys } from "./Keyboard";
+import { Font } from "./Font";
+import { GameConsole } from "./GameConsole";
+import { PunPun } from "./PunPun";
+import { Vec2 } from "./Vec2";
+import { EntityRenderable } from "./EntityRenderable";
+import { Config } from "./Config";
+
+export class Game {
     private keyboard: Keyboard;
     private player: EntityRenderable;
     private size: ClientRect;
 
+    private fps: number;
     private timestep: number;
     private delta: number;
     private lastTick: number;
 
-    private console: GConsole;
+    private gameConsole: GameConsole;
 
-    private sample_text: Font = new Font(Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
+    private sample_text: Font = new Font(Config.Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
 
-
-    constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
+    constructor(private ctx: CanvasRenderingContext2D) {
+        this.fps = Config.GameParams.FPS;
         this.keyboard = new Keyboard();
-        this.console = new GConsole(new Vec2(10, 10), 50, 1, true, 0.5);
-        this.timestep = 1000 / fps;
+        this.gameConsole = new GameConsole(new Vec2(10, 10), 50, 1, true, 0.5);
+        this.timestep = 1000 / this.fps;
         this.delta = 0;
 
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
@@ -25,6 +34,10 @@ class Game {
 
     setSize(size: ClientRect) {
         this.size = size;
+    }
+
+    registerKeys() {
+        this.keyboard.validateKeys([Keys.LEFT, Keys.RIGHT, Keys.UP, Keys.DOWN]);
     }
 
     getKeyboard(): Keyboard {
@@ -46,7 +59,7 @@ class Game {
         // delta is way too high (missed 10s of ticks, reset otherwise loop is basically infinite)
         if (this.delta / this.timestep >= this.fps * 10) {
             this.delta = 0;
-            this.console.log("Resetting delta timestep, 10s of ticks missed");
+            this.gameConsole.log("Resetting delta timestep, 10s of ticks missed");
         }
 
         while (this.delta >= this.timestep) {
@@ -85,19 +98,17 @@ class Game {
             this.player.decelerate(0.1, 0.1);
         }
     }
-    
+
     update(elapsed: number) {
         this.doInput();
         this.player.update();
         this.render();
-        this.console.log("(x,y)=" + (this.player.getPos().x | 0) + ","  + (this.player.getPos().y | 0));
+        this.gameConsole.log("(x,y)=" + (this.player.getPos().x | 0) + "," + (this.player.getPos().y | 0));
     }
 
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         this.player.render(this.ctx);
-        this.console.render(this.ctx);
-        /*this.sample_text.text = "n:" + (this.player.getPath() ? this.player.getPath().getLength() : 0) + "," + this.keyboard.getPresses() + "\ntesting Victoria & newlines.\nhello";
-        this.sample_text.render(this.ctx);*/
+        this.gameConsole.render(this.ctx);
     }
 }

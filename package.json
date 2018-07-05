@@ -1,0 +1,23 @@
+{
+  "name": "tsc-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "domReady": "github:requirejs/domReady"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qubard/tsc-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/qubard/tsc-game/issues"
+  },
+  "homepage": "https://github.com/qubard/tsc-game#readme"
+}

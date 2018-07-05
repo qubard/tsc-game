@@ -1,13 +1,21 @@
-enum CanvasParams {
-    FPS = 128,
-    CanvasID = "canvas"
-}
+import { Vec2 } from "./Vec2";
 
-enum Sprites {
-    PunPun = 'res/stahlsby.png'
-}
+export namespace Config {
+    export const enum GameParams {
+        FPS = 128
+    }
 
-enum Fonts {
-    TorusSans = 'res/fonts/TorusSans.png',
-    Victoria = 'res/fonts/Victoria.png'
+    export const enum Sprites {
+        PunPun = 'res/stahlsby.png'
+    }
+
+    export interface FontParams {
+        size: Vec2;
+        filename: string;
+    }
+
+    export namespace Fonts {
+        export const TorusSans = { size: new Vec2(100, 100), filename: 'res/fonts/TorusSans.png' };
+        export const Victoria = { size: new Vec2(100, 100), filename: 'res/fonts/Victoria.png' };
+    }
 }

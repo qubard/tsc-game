@@ -1,20 +1,24 @@
-class Font implements Renderable {
+import { ImageWrapper } from "./ImageWrapper";
+import { Renderable } from "./Sprite";
+import { Vec2 } from "./Vec2";
+import { Config } from "./Config";
+
+export class Font implements Renderable {
     private glyphs: ImageWrapper;
     rendered: boolean = true;
 
-    static GLYPH_SIZE: number = 9;
-    static charset: string = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ';
+    static readonly GLYPH_SIZE: number = 9;
+    static readonly charset: string = '!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ ';
     static charset_map: number[] = new Array<number>(255);
 
-    constructor(public font: string, public text: string, private scale: number, private dst: Vec2) {
-        this.glyphs = new ImageWrapper(font);
+    constructor(params: Config.FontParams, public text: string, private scale: number, private dst: Vec2) {
+        this.glyphs = new ImageWrapper(params.filename, params.size);
     }
 
     static init_map() {
         for (var i = 0; i < Font.charset.length; i++) {
             let v = Number(Font.charset.charCodeAt(i));
             Font.charset_map[v] = i * Font.GLYPH_SIZE; // map the cropped position of the glyph
-            console.log(v);
         }
     }
 

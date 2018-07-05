@@ -1,4 +1,8 @@
-class Entity {
+import { Vec2 } from "./Vec2";
+import { AABB } from "./AABB";
+import { Path } from "./Path";
+
+export class Entity {
     protected velocity: Vec2 = new Vec2(0, 0);
 
     protected path: Path;
@@ -14,7 +18,7 @@ class Entity {
     getPath(): Path {
         return this.path;
     }
-    
+
     getPos(): Vec2 {
         return this.pos;
     }
