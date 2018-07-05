@@ -10,11 +10,11 @@ export class CircularBuffer<T> {
     }
 
     push(ele: T) {
-        if(this.size <= this.capacity) {
+        if (this.size <= this.capacity) {
             this.size++;
         }
         this.arr[this.front] = ele;
-        this.front = (this.front+1) % this.capacity;
+        this.front = (this.front + 1) % this.capacity;
     }
 
     getCapacity() {

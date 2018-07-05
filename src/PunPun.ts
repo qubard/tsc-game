@@ -1,11 +1,11 @@
-import { Vec2 } from './Vec2';
-import { ImageWrapper } from './ImageWrapper';
-import { AABB } from './AABB';
-import { Config } from './Config'
-import { SpriteHelper } from './Sprite'
-import { EntityRenderable } from './EntityRenderable';
-import { Render } from './Animation';
-import { MotionBlur } from './MotionBlur';
+import { EntityRenderable } from "./EntityRenderable";
+import { Render } from "./Animation";
+import { ImageWrapper } from "./ImageWrapper";
+import { MotionBlur } from "./MotionBlur";
+import { Vec2 } from "./Vec2";
+import { AABB } from "./AABB";
+import { SpriteHelper } from "./Sprite";
+import { Config } from "./Config";
 
 export class PunPun extends EntityRenderable {
 

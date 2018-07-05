@@ -4,7 +4,7 @@ import { Vec2 } from "./Vec2";
 import { CircularBuffer } from "./CircularBuffer";
 
 // Need a position associated with a SpriteFrame
-interface BufferFrame {
+export interface BufferFrame {
     pos: Vec2;
     frame: SpriteFrame;
 }

@@ -1,5 +1,6 @@
 import { Config } from "./Config"
 import { Game } from "./Game"
+import { Keys } from "./Keyboard";
 
 var game: Game;
 

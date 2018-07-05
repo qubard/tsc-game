@@ -9,7 +9,7 @@ export class GameConsole implements Renderable {
 
     private buffer: CircularBuffer<string>;
     private font: Font;
-    
+
     private needsUpdate: boolean;
 
     constructor(private pos: Vec2, private capacity: number, private scale: number, private duplicateChecking: boolean = false, private alpha: number = 1) {
@@ -26,10 +26,10 @@ export class GameConsole implements Renderable {
             }
         }
     }
-    
+
     private updateFont() {
         let s = "";
-        for(var i = 0; i < this.buffer.getLength(); i++) {
+        for (var i = 0; i < this.buffer.getLength(); i++) {
             s += this.buffer.get(i) + '\n';
         }
         this.font.text = s;
@@ -41,12 +41,12 @@ export class GameConsole implements Renderable {
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
             }
-            
-            if(this.needsUpdate) {
+
+            if (this.needsUpdate) {
                 this.updateFont();
                 this.needsUpdate = false;
             }
-            
+
             this.font.render(ctx);
 
             if (this.alpha != 1) {

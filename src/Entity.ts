@@ -18,7 +18,7 @@ export class Entity {
     getPath(): Path {
         return this.path;
     }
-    
+
     getPos(): Vec2 {
         return this.pos;
     }

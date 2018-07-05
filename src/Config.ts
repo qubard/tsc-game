@@ -1,4 +1,4 @@
-import { Vec2 } from './Vec2';
+import { Vec2 } from "./Vec2";
 
 export namespace Config {
     export const enum CanvasParams {

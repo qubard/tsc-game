@@ -1,5 +1,5 @@
-import { Vec2 } from './Vec2'
-import { SpriteFrame } from './Sprite'
+import { Vec2 } from "./Vec2"
+import { SpriteFrame } from './Sprite';
 
 export class ImageWrapper {
     private width: number = -1;
@@ -8,7 +8,7 @@ export class ImageWrapper {
 
     constructor(public filename: string, private size?: Vec2) {
         this.load_image();
-        if(size) {
+        if (size) {
             this.width = size.x;
             this.height = size.y;
         }
@@ -17,12 +17,13 @@ export class ImageWrapper {
     private load_image() {
         this.img = document.createElement('img');
         this.img.src = this.filename;
+        alert("Loaded");
     }
-    
+
     getWidth(): number {
         return this.width;
     }
-    
+
     getHeight(): number {
         return this.height;
     }

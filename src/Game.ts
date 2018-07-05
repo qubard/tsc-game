@@ -1,9 +1,10 @@
-import { Vec2 } from './Vec2';
-import { Font } from './Font';
-import { PunPun } from './PunPun';
-import { Config } from './Config'
-import { EntityRenderable } from './EntityRenderable';
-import { GameConsole } from './GameConsole';
+import { Keyboard, Keys } from "./Keyboard";
+import { Font } from "./Font";
+import { GameConsole } from "./GameConsole";
+import { PunPun } from "./PunPun";
+import { Vec2 } from "./Vec2";
+import { EntityRenderable } from "./EntityRenderable";
+import { Config } from "./Config";
 
 export class Game {
     private keyboard: Keyboard;
@@ -13,9 +14,9 @@ export class Game {
     private timestep: number;
     private delta: number;
     private lastTick: number;
-    
+
     private gameConsole: GameConsole;
-    
+
     private sample_text: Font = new Font(Config.Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
 
     constructor(private ctx: CanvasRenderingContext2D, private fps: number) {
@@ -91,12 +92,12 @@ export class Game {
             this.player.decelerate(0.1, 0.1);
         }
     }
-    
+
     update(elapsed: number) {
         this.doInput();
         this.player.update();
         this.render();
-        this.gameConsole.log("(x,y)=" + (this.player.getPos().x | 0) + ","  + (this.player.getPos().y | 0));
+        this.gameConsole.log("(x,y)=" + (this.player.getPos().x | 0) + "," + (this.player.getPos().y | 0));
     }
 
     render() {

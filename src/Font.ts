@@ -1,7 +1,7 @@
-import { ImageWrapper } from './ImageWrapper';
-import { Renderable } from './Sprite'
-import { Vec2 } from './Vec2';
-import { Config } from './Config'
+import { ImageWrapper } from "./ImageWrapper";
+import { Renderable } from "./Sprite";
+import { Vec2 } from "./Vec2";
+import { Config } from "./Config";
 
 export class Font implements Renderable {
     private glyphs: ImageWrapper;
