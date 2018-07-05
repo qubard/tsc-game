@@ -2,8 +2,49 @@
 <head>
 <title></title>
 </head>
-<script type="text/javascript" src="node_modules/systemjs/dist/system.js"></script>
-<script type="text/javascript" src="ts-build/tsc.js"></script>
+<script type="text/javascript" src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+<script type="text/javascript">
+    requirejs.config({
+        baseUrl: 'build'
+    });
+
+    require(['domReady', 'Game'], function (domReady, Game) {
+      domReady(function () {
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = false; // enable nearest neighbor scaling
+        
+        var game = new Game.Game(ctx, 128);
+        game.setSize(canvas.getBoundingClientRect());
+
+        init();
+
+        function registerKeys() {
+            game.registerKeys();
+            window.addEventListener('keydown', keydown, false);
+            window.addEventListener('keyup', keyup, false);
+        }
+
+        function keydown(e) {
+            game.getKeyboard().handleKeydown(e.keyCode);
+        }
+
+        function keyup(e) {
+            game.getKeyboard().handleKeyup(e.keyCode);
+        }
+
+        function init() {
+            registerKeys();
+            render();
+        }
+
+        function render() {
+            game.loop();
+            window.requestAnimationFrame(render);
+        }
+      });
+    });
+    </script>
 <body style="overflow: hidden">
 <div style="width: 1000px; margin: 0px auto">
     <canvas style="background-color:#404040" id="canvas" width="1000" height="800"></canvas></br>

@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-        "module": "system",
+        "module": "amd",
         "noImplicitAny": true,
         "removeComments": true,
         "preserveConstEnums": true,
-        "outFile": "ts-build/tsc.js",
-        "sourceMap": false
+        "sourceMap": false,
+        "outDir": "build"
     },
     "include": [
         "src/*"

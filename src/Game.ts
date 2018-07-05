@@ -34,6 +34,10 @@ export class Game {
         this.size = size;
     }
 
+    registerKeys() {
+        this.keyboard.validateKeys([Keys.LEFT, Keys.RIGHT, Keys.UP, Keys.DOWN]);
+    }
+
     getKeyboard(): Keyboard {
         return this.keyboard;
     }

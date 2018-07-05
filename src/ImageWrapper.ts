@@ -17,7 +17,6 @@ export class ImageWrapper {
     private load_image() {
         this.img = document.createElement('img');
         this.img.src = this.filename;
-        alert("Loaded");
     }
 
     getWidth(): number {

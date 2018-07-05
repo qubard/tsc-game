@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "systemjs": "^0.21.4"
+    "domReady": "github:requirejs/domReady"
   },
   "devDependencies": {},
   "scripts": {
