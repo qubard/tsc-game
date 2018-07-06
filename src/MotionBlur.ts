@@ -7,6 +7,7 @@ import { CircularBuffer } from "./CircularBuffer";
 export interface BufferFrame {
     pos: Vec2;
     frame: SpriteFrame;
+    expire?: number;
 }
 
 export class MotionBlur implements Renderable {
@@ -16,8 +17,8 @@ export class MotionBlur implements Renderable {
     private lastFeed: number = Date.now();
     private sprite: ImageWrapper;
 
-    constructor(private capacity: number, private feed_delay: number) {
-        this.spriteBuffer = new CircularBuffer<BufferFrame>(this.capacity);
+    constructor(private feed_delay: number, private expires: number) {
+        this.spriteBuffer = new CircularBuffer<BufferFrame>(expires/feed_delay+1);
     }
 
     setSprite(sprite: ImageWrapper) {
@@ -28,6 +29,7 @@ export class MotionBlur implements Renderable {
     feed(frame: BufferFrame) {
         let curr = Date.now();
         if (curr - this.lastFeed > this.feed_delay) {
+            frame.expire = curr + this.expires;
             this.spriteBuffer.push(frame);
             this.lastFeed = curr;
         }
@@ -35,12 +37,13 @@ export class MotionBlur implements Renderable {
 
     render(ctx: CanvasRenderingContext2D, frame?: BufferFrame) {
         if (ctx != null && this.rendered) {
-            for (var i = 0; i < this.spriteBuffer.getLength(); i++) {
-                var buff = this.spriteBuffer.get(i);
-                if (buff) {
+            for(var i = 0; i < this.spriteBuffer.getLength(); i++) {
+                let sprite = this.spriteBuffer.get(i);
+                let expireDelta = Date.now()-sprite.expire;
+                if(sprite.expire && expireDelta < 0) {
                     ctx.save();
-                    ctx.globalAlpha = Math.max(0, 0.2);
-                    this.sprite.draw(ctx, buff.frame, buff.pos);
+                    ctx.globalAlpha = Math.max(0, -expireDelta/(this.expires)-0.4);
+                    this.sprite.draw(ctx, sprite.frame, sprite.pos);
                     ctx.restore();
                 }
             }

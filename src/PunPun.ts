@@ -8,7 +8,7 @@ import { SpriteHelper } from "./Sprite";
 import { Config } from "./Config";
 
 export class PunPun extends EntityRenderable {
-
+    
     constructor(protected pos: Vec2, public dir: Vec2, protected bbox?: AABB) {
         super(pos, dir, bbox);
 
@@ -19,7 +19,7 @@ export class PunPun extends EntityRenderable {
 
         this.sprite = new ImageWrapper(Config.Sprites.PunPun);
 
-        this.blur = new MotionBlur(5, 100); // capacity and feed delay (ms) as arguments
+        this.blur = new MotionBlur(100, 600); // feed delay < expiry delay
         this.blur.setSprite(this.sprite);
 
         this.setMaxVelocity(2);

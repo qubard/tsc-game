@@ -62,7 +62,6 @@ export class EntityRenderable extends Entity implements Renderable {
             if (this.path) {
                 this.path.render(ctx);
             }
-
         }
     }
 }

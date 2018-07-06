@@ -18,8 +18,6 @@ export class Game {
 
     private gameConsole: GameConsole;
 
-    private sample_text: Font = new Font(Config.Fonts.Victoria, "Hi, testing fonts.\\:^)", 2, new Vec2(10, 10));
-
     constructor(private ctx: CanvasRenderingContext2D) {
         this.fps = Config.GameParams.FPS;
         this.keyboard = new Keyboard();
@@ -30,13 +28,15 @@ export class Game {
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
 
         Font.init_map();
+
+        this.registerKeys();
     }
 
     setSize(size: ClientRect) {
         this.size = size;
     }
 
-    registerKeys() {
+    private registerKeys() {
         this.keyboard.validateKeys([Keys.LEFT, Keys.RIGHT, Keys.UP, Keys.DOWN]);
     }
 
