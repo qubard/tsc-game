@@ -6,6 +6,7 @@ import { Vec2 } from "./Vec2";
 import { AABB } from "./AABB";
 import { SpriteHelper } from "./Sprite";
 import { Config } from "./Config";
+import { Path } from "./Path";
 
 export class PunPun extends EntityRenderable {
     
@@ -19,7 +20,7 @@ export class PunPun extends EntityRenderable {
 
         this.sprite = new ImageWrapper(Config.Sprites.PunPun);
 
-        this.blur = new MotionBlur(100, 600); // feed delay < expiry delay
+        this.blur = new MotionBlur(100, 700); // feed delay < expiry delay
         this.blur.setSprite(this.sprite);
 
         this.setMaxVelocity(2);

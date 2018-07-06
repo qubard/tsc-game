@@ -4,14 +4,13 @@ import { SpriteFrame, Renderable } from "./Sprite";
 
 export class Path implements Renderable {
     sprite?: ImageWrapper;
-    rendered: boolean;
+    rendered: boolean = true;
     private nodes: Vec2[];
     private lastPush: number;
 
     constructor(private delay: number) {
         this.nodes = [];
         this.lastPush = Date.now();
-        this.rendered = true;
     }
 
     getDelay(): number {

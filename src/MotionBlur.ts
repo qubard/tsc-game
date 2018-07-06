@@ -18,7 +18,7 @@ export class MotionBlur implements Renderable {
     private sprite: ImageWrapper;
 
     constructor(private feed_delay: number, private expires: number) {
-        this.spriteBuffer = new CircularBuffer<BufferFrame>(expires/feed_delay+1);
+        this.spriteBuffer = new CircularBuffer<BufferFrame>(Math.floor(expires/feed_delay)+1);
     }
 
     setSprite(sprite: ImageWrapper) {
