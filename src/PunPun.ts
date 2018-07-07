@@ -25,7 +25,7 @@ export class PunPun extends EntityRenderable {
 
         this.setMaxVelocity(2);
 
-        let scale = 4;
+        let scale = Config.GameParams.Scale;
         let size = new Vec2(18, 17);
 
         this.setBoundingBox(new AABB(this.pos, size.scale(scale)));

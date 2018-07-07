@@ -106,7 +106,7 @@ export class Game {
         this.doInput();
         this.player.update();
         this.pistol.dir = this.player.dir;
-        this.pistol.setPos(this.player.getPos().plus(this.player.getFacingDirection().scale(17*4)));
+        this.pistol.setPos(this.player.getPos().plus(this.player.getFacingDirection().scale(17*Config.GameParams.Scale)));
         this.render();
         this.gameConsole.log("(x,y)=" + (this.player.getPos().x | 0) + "," + (this.player.getPos().y | 0));
     }

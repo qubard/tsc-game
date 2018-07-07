@@ -2,7 +2,8 @@ import { Vec2 } from "./Vec2";
 
 export namespace Config {
     export const enum GameParams {
-        FPS = 128
+        FPS = 128,
+        Scale = 4
     }
 
     export const enum Sprites {

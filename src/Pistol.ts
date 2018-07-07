@@ -18,11 +18,12 @@ export class Pistol extends EntityRenderable {
         this.move_left = new Render.Animation(30);
         this.move_right = new Render.Animation(30);
 
+        let scale = Config.GameParams.Scale;
         let size = new Vec2(17, 12);
 
-        this.idle_right.pushFrame(SpriteHelper.frameAt(0, size, 4));
-        this.move_right.pushFrame(SpriteHelper.frameAt(0, size, 4));
-        this.idle_left.pushFrame(SpriteHelper.frameAt(1, size, 4));
-        this.move_left.pushFrame(SpriteHelper.frameAt(1, size, 4));
+        this.idle_right.pushFrame(SpriteHelper.frameAt(0, size, scale));
+        this.move_right.pushFrame(SpriteHelper.frameAt(0, size, scale));
+        this.idle_left.pushFrame(SpriteHelper.frameAt(1, size, scale));
+        this.move_left.pushFrame(SpriteHelper.frameAt(1, size, scale));
     }
 }
