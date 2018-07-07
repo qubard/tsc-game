@@ -5,6 +5,7 @@ import { PunPun } from "./PunPun";
 import { Vec2 } from "./Vec2";
 import { EntityRenderable } from "./EntityRenderable";
 import { Config } from "./Config";
+import { Pistol } from "./Pistol";
 
 export class Game {
     private keyboard: Keyboard;
@@ -18,6 +19,8 @@ export class Game {
 
     private gameConsole: GameConsole;
 
+    private pistol: Pistol;
+
     constructor(private ctx: CanvasRenderingContext2D) {
         this.fps = Config.GameParams.FPS;
         this.keyboard = new Keyboard();
@@ -26,7 +29,7 @@ export class Game {
         this.delta = 0;
 
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
-
+        this.pistol = new Pistol(new Vec2(50, 50), new Vec2(1,0));
         Font.init_map();
 
         this.registerKeys();
@@ -102,6 +105,8 @@ export class Game {
     update(elapsed: number) {
         this.doInput();
         this.player.update();
+        this.pistol.dir = this.player.dir;
+        this.pistol.setPos(this.player.getPos().plus(this.player.getFacingDirection().scale(17*4)));
         this.render();
         this.gameConsole.log("(x,y)=" + (this.player.getPos().x | 0) + "," + (this.player.getPos().y | 0));
     }
@@ -109,6 +114,7 @@ export class Game {
     render() {
         this.ctx.clearRect(0, 0, this.size.width, this.size.height);
         this.player.render(this.ctx);
+        this.pistol.render(this.ctx);
         this.gameConsole.render(this.ctx);
     }
 }

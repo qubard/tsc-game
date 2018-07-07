@@ -6,7 +6,8 @@ export namespace Config {
     }
 
     export const enum Sprites {
-        PunPun = 'res/stahlsby.png'
+        PunPun = 'res/stahlsby.png',
+        Pistol = 'res/pistol.png'
     }
 
     export interface FontParams {

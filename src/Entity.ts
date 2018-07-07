@@ -19,6 +19,14 @@ export class Entity {
         return this.path;
     }
 
+    setPos(pos: Vec2) {
+        this.pos = pos;
+    }
+
+    getFacingDirection(): Vec2 {
+        return new Vec2(this.facingRight ? 1 : -1, 0);
+    }
+
     getPos(): Vec2 {
         return this.pos;
     }
