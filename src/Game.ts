@@ -30,6 +30,7 @@ export class Game {
 
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
         this.pistol = new Pistol(new Vec2(50, 50), new Vec2(1,0));
+        this.pistol.attachTo(this.player);
         Font.init_map();
 
         this.registerKeys();
@@ -105,8 +106,7 @@ export class Game {
     update(elapsed: number) {
         this.doInput();
         this.player.update();
-        this.pistol.dir = this.player.dir;
-        this.pistol.setPos(this.player.getPos().plus(this.player.getFacingDirection().scale(17*Config.GameParams.Scale)));
+        this.pistol.update();
         this.render();
         this.gameConsole.log("(x,y)=" + (this.player.getPos().x | 0) + "," + (this.player.getPos().y | 0));
     }

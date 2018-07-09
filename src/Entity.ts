@@ -10,9 +10,22 @@ export class Entity {
 
     protected facingRight: boolean;
 
+    private attachedEntity: Entity;
+
     constructor(protected pos: Vec2, public dir: Vec2, protected bbox?: AABB) {
         this.pos = pos;
         this.bbox = bbox;
+    }
+
+    attachTo(entity: Entity) {
+        this.attachedEntity = entity;
+    }
+
+    getScale(): Vec2 {
+        if(this.bbox) {
+            return this.bbox.getSize();
+        }
+        return new Vec2(0, 0);
     }
 
     getPath(): Path {
@@ -46,6 +59,10 @@ export class Entity {
             if (this.path) {
                 this.path.addNode(this.pos);
             }
+        }
+
+        if(this.attachedEntity) {
+            this.pos = this.attachedEntity.getPos().plus(this.attachedEntity.getFacingDirection().scaleVec(this.attachedEntity.getScale()));
         }
     }
 

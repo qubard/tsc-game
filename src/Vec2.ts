@@ -9,6 +9,10 @@ export class Vec2 {
         return Vec2.times(k, this);
     }
 
+    scaleVec(vec: Vec2) {
+        return new Vec2(vec.x * this.x, vec.y * this.y); 
+    }
+
     plus(v: Vec2) {
         return Vec2.plus(this, v);
     }

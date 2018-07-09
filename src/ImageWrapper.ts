@@ -32,6 +32,6 @@ export class ImageWrapper {
     }
 
     draw(ctx: CanvasRenderingContext2D, frame: SpriteFrame, pos: Vec2) {
-        ctx.drawImage(this.img, frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, pos.x, pos.y, frame.size.x * frame.scale, frame.size.y * frame.scale);
+        ctx.drawImage(this.img, frame.crop.x, frame.crop.y, frame.size.x, frame.size.y, pos.x + frame.offset.x, pos.y + frame.offset.y, frame.size.x * frame.scale, frame.size.y * frame.scale);
     }
 }
