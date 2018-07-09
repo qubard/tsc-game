@@ -22,7 +22,7 @@ export class Pistol extends EntityRenderable {
         let size = new Vec2(17, 12);
 
         for(var i = -Math.PI/2; i < Math.PI/2; i += 0.1) {
-            this.idle_left.pushFrame(SpriteHelper.frameAtOffset(0, size, scale, new Vec2(0, 16 * Math.cos(i))));
+            this.idle_left.pushFrame(SpriteHelper.frameAtOffset(1, size, scale, new Vec2(0, 16 * Math.cos(i))));
         }
     }
 }

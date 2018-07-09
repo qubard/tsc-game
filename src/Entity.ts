@@ -62,6 +62,8 @@ export class Entity {
         }
 
         if(this.attachedEntity) {
+            this.facingRight = this.attachedEntity.facingRight;
+            this.dir = this.attachedEntity.dir;
             this.pos = this.attachedEntity.getPos().plus(this.attachedEntity.getFacingDirection().scaleVec(this.attachedEntity.getScale()));
         }
     }
