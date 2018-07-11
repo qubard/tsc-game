@@ -36,13 +36,13 @@ export class MotionBlur implements Renderable {
     }
 
     render(ctx: CanvasRenderingContext2D, frame?: BufferFrame) {
-        if (ctx != null && this.rendered) {
+        if (this.rendered) {
             for(var i = 0; i < this.spriteBuffer.getLength(); i++) {
                 let sprite = this.spriteBuffer.get(i);
-                let expireDelta = Date.now()-sprite.expire;
+                let expireDelta = Date.now() - sprite.expire;
                 if(sprite.expire && expireDelta < 0) {
                     ctx.save();
-                    ctx.globalAlpha = Math.max(0, -expireDelta/(this.expires)-0.4);
+                    ctx.globalAlpha = Math.max(0, -expireDelta/(this.expires) - 0.4);
                     this.sprite.draw(ctx, sprite.frame, sprite.pos);
                     ctx.restore();
                 }

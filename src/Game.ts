@@ -31,7 +31,6 @@ export class Game {
         this.player = new PunPun(new Vec2(50, 50), new Vec2(0, 0));
         this.pistol = new Pistol(new Vec2(50, 50), new Vec2(1,0));
         this.pistol.attachTo(this.player);
-        Font.init_map();
 
         this.registerKeys();
     }
@@ -112,9 +111,11 @@ export class Game {
     }
 
     render() {
-        this.ctx.clearRect(0, 0, this.size.width, this.size.height);
-        this.player.render(this.ctx);
-        this.pistol.render(this.ctx);
-        this.gameConsole.render(this.ctx);
+        if(this.ctx) {
+            this.ctx.clearRect(0, 0, this.size.width, this.size.height);
+            this.player.render(this.ctx);
+            this.pistol.render(this.ctx);
+            this.gameConsole.render(this.ctx);
+        }
     }
 }

@@ -12,12 +12,12 @@ export namespace Config {
     }
 
     export interface FontParams {
-        size: Vec2;
+        cropSize: Vec2;
         filename: string;
     }
 
     export namespace Fonts {
-        export const TorusSans = { size: new Vec2(100, 100), filename: 'res/fonts/TorusSans.png' };
-        export const Victoria = { size: new Vec2(100, 100), filename: 'res/fonts/Victoria.png' };
+        export const TorusSans = { cropSize: new Vec2(9, 9), filename: 'res/fonts/TorusSans.png' };
+        export const Victoria = { cropSize: new Vec2(9, 9), filename: 'res/fonts/Victoria.png' };
     }
 }

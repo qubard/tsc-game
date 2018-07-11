@@ -28,20 +28,25 @@ export class EntityRenderable extends Entity implements Renderable {
             ret = Math.abs(dir.y) == 0 ? facingRight ? this.idle_right : this.idle_left : facingRight ? this.move_right : this.move_left;
         }
 
-        // Reset the current frame if the active frame changes (within the getter itself)
-        if (ret != this.active) {
-            if (this.active) {
-                this.active.resetFrame();
-            }
-            this.active = ret;
-        }
-
         return ret;
     }
 
+    resetFrame(animation: Render.Animation): void {
+        if (animation != this.active) {
+            if (this.active) {
+                this.active.resetFrame();
+            }
+            this.active = animation;
+        }
+    }
+
     render(ctx: CanvasRenderingContext2D) {
-        if (ctx != null && this.rendered && this.sprite) {
+        if (this.rendered) {
             let animation = this.getAnimation(this.dir, this.facingRight);
+
+            // Reset the frame index if the animation changes
+            this.resetFrame(animation);
+
             let frames = animation.getFrames();
 
             if (frames) {

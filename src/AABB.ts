@@ -2,7 +2,7 @@ import { Vec2 } from "./Vec2";
 import { Renderable } from "./Sprite";
 
 export class AABB implements Renderable {
-    rendered: boolean = true;
+    rendered: boolean = false;
 
     constructor(private pos: Vec2, private size: Vec2) { }
 
@@ -21,7 +21,7 @@ export class AABB implements Renderable {
     }
 
     render(ctx: CanvasRenderingContext2D): void {
-        if (ctx != null && this.rendered) {
+        if (this.rendered) {
             ctx.beginPath(); // clear old rect path
             ctx.strokeStyle = "#FF0000";
             ctx.moveTo(this.pos.x, this.pos.y);

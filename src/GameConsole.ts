@@ -36,7 +36,7 @@ export class GameConsole implements Renderable {
     }
 
     render(ctx: CanvasRenderingContext2D) {
-        if (ctx != null && this.rendered) {
+        if (this.rendered) {
             if (this.alpha != 1) {
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
